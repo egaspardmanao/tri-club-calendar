@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mode d'emploi Tri Club PSC</title>
+<link rel="icon" type="image/jpeg" href="/favicon.jpeg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #faf8f6;
+    --surface: #ffffff;
+    --surface-2: #f4f1ee;
+    --border: #e7e1db;
+    --ink: #211b17;
+    --ink-soft: #5c5450;
+    --ink-faint: #8c8480;
+    --red: #b91c1c;
+    --red-ink: #8f1616;
+    --red-tint: #fdf0ef;
+    --green: #1d7a5c;
+    --green-tint: #eef7f3;
+    --amber: #a3690f;
+    --amber-tint: #fbf3e6;
+    --shadow: 0 1px 2px rgba(33, 27, 23, 0.04), 0 8px 24px -12px rgba(33, 27, 23, 0.12);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16130f;
+      --surface: #1f1a15;
+      --surface-2: #262019;
+      --border: #362e26;
+      --ink: #f3ede6;
+      --ink-soft: #bdb2a8;
+      --ink-faint: #857a70;
+      --red: #e0574f;
+      --red-ink: #f0847d;
+      --red-tint: #2a1613;
+      --green: #4fae8c;
+      --green-tint: #142621;
+      --amber: #d3a15a;
+      --amber-tint: #2a2114;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #16130f;
+    --surface: #1f1a15;
+    --surface-2: #262019;
+    --border: #362e26;
+    --ink: #f3ede6;
+    --ink-soft: #bdb2a8;
+    --ink-faint: #857a70;
+    --red: #e0574f;
+    --red-ink: #f0847d;
+    --red-tint: #2a1613;
+    --green: #4fae8c;
+    --green-tint: #142621;
+    --amber: #d3a15a;
+    --amber-tint: #2a2114;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Barlow Condensed', system-ui, sans-serif;
+    font-weight: 700;
+    text-wrap: balance;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 20px 96px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+  .hero-eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 2px;
+    background: var(--red);
+    display: inline-block;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    line-height: 1.05;
+    margin: 0 0 14px;
+  }
+  .hero p {
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0;
+  }
+
+  /* ---------- Table of contents ---------- */
+  .toc {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .toc a {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .toc a:hover { border-color: var(--red); background: var(--red-tint); }
+  .toc .num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    color: var(--red);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 560px) {
+    .toc { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Sections ---------- */
+  section.feature {
+    padding: 44px 0;
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: 20px;
+  }
+  section.feature:last-of-type { border-bottom: none; }
+
+  .feature-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .feature-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--red-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feature-icon svg { width: 20px; height: 20px; stroke: var(--red); }
+  .feature-head h2 {
+    font-size: 1.55rem;
+    margin: 0 0 2px;
+  }
+  .feature-tag {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+
+  .feature-body p {
+    margin: 0 0 14px;
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 62ch;
+  }
+  .feature-body p:last-child { margin-bottom: 0; }
+  .feature-body strong { color: var(--ink); font-weight: 600; }
+
+  .steps {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+  }
+  .steps .n {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin-top: 1px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tip {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: var(--surface-2);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .tip svg { width: 15px; height: 15px; stroke: var(--ink-faint); flex-shrink: 0; margin-top: 2px; }
+
+  /* ---------- Mini mockups ---------- */
+  .mock {
+    margin-top: 18px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+  .mock-bar {
+    display: flex;
+    gap: 5px;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+  .mock-bar span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--border);
+  }
+  .mock-body { padding: 14px 16px; }
+
+  /* Badge chips reused across mockups */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .chip.xs { background: var(--green-tint); color: var(--green); }
+  .chip.m { background: var(--red-tint); color: var(--red-ink); }
+  .chip.xl { background: var(--amber-tint); color: var(--amber); }
+  .chip.club {
+    background: var(--red-tint); color: var(--red-ink);
+    display: inline-flex; align-items: center; gap: 3px;
+  }
+  .chip.club svg { width: 9px; height: 9px; stroke: currentColor; }
+  .chip.taken { background: var(--surface-2); color: var(--ink-faint); }
+
+  /* Card row mockup */
+  .m-card {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 12px; border: 1px solid var(--border); border-radius: 8px;
+    margin-bottom: 8px; background: var(--surface);
+  }
+  .m-card:last-child { margin-bottom: 0; }
+  .m-card-title { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 3px; }
+  .m-card-sub { font-size: 12.5px; color: var(--ink-faint); }
+  .m-card-tags { display: flex; gap: 5px; }
+
+  /* Map mockup */
+  .m-map {
+    height: 120px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(29, 122, 92, 0.10), transparent 40%),
+      radial-gradient(circle at 70% 65%, rgba(163, 105, 15, 0.10), transparent 40%),
+      var(--surface-2);
+    border: 1px solid var(--border);
+  }
+  .m-pin {
+    position: absolute;
+    width: 16px; height: 16px;
+    background: var(--red);
+    border: 2px solid var(--surface);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+  }
+
+  /* Toggle mockup */
+  .m-toggle-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .m-toggle {
+    padding: 5px 11px; border-radius: 6px; font-size: 12.5px; font-weight: 500;
+    border: 1px solid var(--border); color: var(--ink-soft); background: var(--surface);
+  }
+  .m-toggle.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+  /* Participant pills */
+  .m-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 999px; padding: 3px 8px 3px 10px; font-size: 12.5px; color: var(--ink);
+    margin: 2px 4px 2px 0;
+  }
+  .m-pill .x { color: var(--ink-faint); font-size: 11px; }
+
+  /* Bib listing mockup */
+  .m-bib {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; margin-bottom: 6px;
+  }
+  .m-bib.avail { background: var(--surface); }
+  .m-bib.taken-row { background: var(--surface-2); opacity: 0.6; }
+  .m-bib-name { font-weight: 600; }
+  .m-bib-meta { color: var(--ink-faint); font-size: 12px; }
+
+  /* Footer */
+  .footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer strong { color: var(--ink-soft); font-weight: 600; }
+
+  ::selection { background: var(--red-tint); color: var(--red-ink); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="hero-eyebrow">Guide membre</div>
+    <h1>Tri Club PSC —<br>le mode d'emploi</h1>
+    <p>Tout ce que le calendrier de saison permet de faire : trouver un triathlon, s'inscrire, organiser la logistique du club, et échanger les dossards entre membres.</p>
+
+    <nav class="toc">
+      <a href="#carte"><span class="num">01</span> La carte</a>
+      <a href="#liste"><span class="num">02</span> La liste</a>
+      <a href="#fiche"><span class="num">03</span> Fiche triathlon</a>
+      <a href="#inscription"><span class="num">04</span> S'inscrire</a>
+      <a href="#ajouter"><span class="num">05</span> Ajouter un triathlon</a>
+      <a href="#club"><span class="num">06</span> Événements club</a>
+      <a href="#anciens"><span class="num">07</span> Anciens triathlons</a>
+      <a href="#dossards"><span class="num">08</span> Bourse aux dossards</a>
+    </nav>
+  </header>
+
+  <section class="feature" id="carte">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+      </div>
+      <div>
+        <h2>La carte</h2>
+        <span class="feature-tag">Vue par défaut</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>La carte de France affiche <strong>tous les triathlons à venir</strong> avec un repère à leur emplacement. Une liste synthétique reste visible à côté (ou en dessous, sur mobile) pour naviguer rapidement.</p>
+      <p>Clique sur un repère ou une carte de la liste pour ouvrir la <strong>fiche détail</strong> de l'événement.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div class="m-map">
+          <div class="m-pin" style="top:38px; left:70px;"></div>
+          <div class="m-pin" style="top:62px; left:160px;"></div>
+          <div class="m-pin" style="top:28px; left:220px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="liste">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+      </div>
+      <div>
+        <h2>La liste</h2>
+        <span class="feature-tag">Vue alternative</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Bascule en vue liste pour voir tous les triathlons regroupés par mois. Trois façons de trier : <strong>par date</strong>, <strong>par format</strong>, ou <strong>par ville</strong>. Un filtre par format (XS à XXL) permet d'affiner d'un clic.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div class="m-toggle-row" style="margin-bottom:12px;">
+          <span class="m-toggle active">Par date</span>
+          <span class="m-toggle">Par format</span>
+          <span class="m-toggle">Par ville</span>
+        </div>
+        <div class="m-card">
+          <div>
+            <div class="m-card-title">Triathlon de Nice</div>
+            <div class="m-card-sub">Nice · 18 avril 2027</div>
+          </div>
+          <div class="m-card-tags"><span class="chip m">M</span><span class="chip xl">XL</span></div>
+        </div>
+        <div class="m-card">
+          <div>
+            <div class="m-card-title">L'Embrunman</div>
+            <div class="m-card-sub">Embrun · 9 août 2027</div>
+          </div>
+          <div class="m-card-tags"><span class="chip xs">XXL</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="fiche">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+      </div>
+      <div>
+        <h2>La fiche triathlon</h2>
+        <span class="feature-tag">Détail d'un événement</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>En cliquant sur un triathlon, tu retrouves : les <strong>formats proposés</strong>, les liens utiles (site officiel, inscription, groupe WhatsApp), les <strong>infos pratiques</strong> laissées par l'organisateur (covoiturage, hébergement…), et la liste des <strong>membres déjà inscrits</strong>.</p>
+      <p>Si l'événement se déroule sur <strong>plusieurs jours</strong> (formats différents le samedi et le dimanche par exemple), la fiche affiche la période complète : « Du 12 au 13 juin ».</p>
+    </div>
+    <div class="tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span>Tu peux <strong>modifier</strong> ou <strong>supprimer</strong> un triathlon que tu as ajouté via les icônes en haut à droite de sa fiche.</span>
+    </div>
+  </section>
+
+  <section class="feature" id="inscription">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div>
+        <h2>S'inscrire à un triathlon</h2>
+        <span class="feature-tag">Depuis la fiche détail</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Sur la fiche d'un triathlon, indique ton prénom et le format choisi, puis valide. Tu apparais alors dans la liste des participants — visible par tout le club pour organiser covoiturage et logement.</p>
+    </div>
+    <ol class="steps">
+      <li><span class="n">1</span> Ouvre la fiche du triathlon qui t'intéresse</li>
+      <li><span class="n">2</span> Saisis ton prénom et choisis ton format dans « Ajouter ma participation »</li>
+      <li><span class="n">3</span> Clique sur « Je participe ! »</li>
+    </ol>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div style="font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:600; margin-bottom:8px;">Participants (3)</div>
+        <div>
+          <span class="m-pill">Julie <span class="chip xs" style="padding:1px 5px;">S</span></span>
+          <span class="m-pill">Marc <span class="chip m" style="padding:1px 5px;">M</span></span>
+          <span class="m-pill">Sofia <span class="chip xl" style="padding:1px 5px;">XL</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="tip">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span>Un empêchement ? Clique sur le <strong>×</strong> à côté de ton nom dans la liste des participants pour annuler ta participation.</span>
+    </div>
+  </section>
+
+  <section class="feature" id="ajouter">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      </div>
+      <div>
+        <h2>Ajouter un triathlon</h2>
+        <span class="feature-tag">Bouton en haut à droite</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Tu as repéré un triathlon qui manque au calendrier ? Ajoute-le avec le nom, la ville, la date (et une date de fin si l'événement dure plusieurs jours), les formats proposés, et les liens utiles. La localisation sur la carte se fait automatiquement à partir de la ville.</p>
+    </div>
+    <ol class="steps">
+      <li><span class="n">1</span> Clique sur « Ajouter » en haut à droite</li>
+      <li><span class="n">2</span> Renseigne nom, ville, date et au moins un format</li>
+      <li><span class="n">3</span> Ajoute (si tu les as) le site officiel, le lien d'inscription et le groupe WhatsApp</li>
+      <li><span class="n">4</span> Valide — le triathlon apparaît aussitôt sur la carte</li>
+    </ol>
+  </section>
+
+  <section class="feature" id="club">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/></svg>
+      </div>
+      <div>
+        <h2>Événements club</h2>
+        <span class="feature-tag">Case à cocher à l'ajout</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Un triathlon peut être marqué comme <strong>« Événement club »</strong> : ça signifie que le club organise une logistique facilitée — covoiturage, logement, inscriptions groupées. Ces événements sont repérables partout par un badge dédié.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div class="m-card" style="margin-bottom:0;">
+          <div>
+            <span class="chip club" style="margin-bottom:6px; display:inline-flex;">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/></svg>
+              Événement club
+            </span>
+            <div class="m-card-title">Triathlon de Paris</div>
+            <div class="m-card-sub">Paris · 13 juin 2027</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="anciens">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8M1 3h22v5H1V3zM10 12h4"/></svg>
+      </div>
+      <div>
+        <h2>Anciens triathlons</h2>
+        <span class="feature-tag">Archives</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Une fois la date passée, un triathlon quitte automatiquement la carte et la liste principale pour ne pas encombrer l'affichage. Il reste consultable via le bouton <strong>« Anciens »</strong> dans la barre d'outils.</p>
+      <p>Sur un ancien triathlon, un bouton <strong>« Reprogrammer »</strong> permet de décaler sa date d'un an — pratique pour préparer l'édition suivante sans tout ressaisir.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div class="m-toggle-row">
+          <span class="m-toggle">Carte</span>
+          <span class="m-toggle">Liste</span>
+          <span class="m-toggle active" style="display:inline-flex; align-items:center; gap:5px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M21 8v13H3V8M1 3h22v5H1V3z"/></svg>
+            Anciens (4)
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="dossards">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h.01M11 15h4M5 6h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z"/></svg>
+      </div>
+      <div>
+        <h2>Bourse aux dossards</h2>
+        <span class="feature-tag">Onglet dédié</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Un empêchement de dernière minute ? Dépose ton dossard dans l'onglet <strong>« Bourse »</strong> pour qu'un autre membre le récupère : triathlon concerné, format, ton prénom et un moyen de te contacter (téléphone, mail ou réseau social).</p>
+      <p>Une <strong>recherche</strong> permet de filtrer par nom de triathlon ou par format, et un <strong>tri</strong> par date, format ou triathlon aide à s'y retrouver.</p>
+    </div>
+    <ol class="steps">
+      <li><span class="n">1</span> Va dans l'onglet « Bourse », clique « Céder un dossard »</li>
+      <li><span class="n">2</span> Choisis le triathlon et le format concernés, indique ton contact</li>
+      <li><span class="n">3</span> Un preneur intéressé te contacte directement</li>
+      <li><span class="n">4</span> Marque le dossard comme « pris » une fois cédé — il passe en bas de liste, grisé</li>
+    </ol>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div class="m-bib avail">
+          <div>
+            <div class="m-bib-name">Triathlon de Nice <span class="chip xl" style="margin-left:4px;">XL</span></div>
+            <div class="m-bib-meta">Cédé par Théo · 06 12 34 56 78</div>
+          </div>
+        </div>
+        <div class="m-bib avail">
+          <div>
+            <div class="m-bib-name">Triathlon de Paris <span class="chip m" style="margin-left:4px;">M</span></div>
+            <div class="m-bib-meta">Cédé par Lina · @lina.tri</div>
+          </div>
+        </div>
+        <div class="m-bib taken-row">
+          <div>
+            <div class="m-bib-name">L'Embrunman <span class="chip taken" style="margin-left:4px;">Pris</span></div>
+            <div class="m-bib-meta">Cédé par Karim</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <span>Une question ? Demande sur le groupe WhatsApp du club.</span>
+    <span><strong>Tri Club PSC</strong> — calendrier de saison</span>
+  </div>
+
+</div>
+</body>
+</html>
