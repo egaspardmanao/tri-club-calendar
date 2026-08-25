@@ -1,13 +1,18 @@
 import { useState, useMemo } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { Map, List, SlidersHorizontal, Plus, Waves } from 'lucide-react'
+import { Map, List, SlidersHorizontal, Plus, Archive } from 'lucide-react'
 import TriathlonMap from './components/TriathlonMap'
 import EventCard from './components/EventCard'
 import EventModal from './components/EventModal'
 import AddEventModal from './components/AddEventModal'
 import { useTriathlons } from './hooks/useTriathlons'
 import { FORMAT_ORDER } from './lib/formats'
+import pscLogo from './assets/psc-logo.jpeg'
+
+function isPastDate(date) {
+  return date ? new Date(date) < new Date().setHours(0, 0, 0, 0) : false
+}
 
 const SORT_OPTIONS = [
   { value: 'date', label: 'Par date' },
@@ -43,13 +48,17 @@ export default function App() {
   const [filterFormat, setFilterFormat] = useState(null)
   const [selected, setSelected] = useState(null)
   const [addOpen, setAddOpen] = useState(false)
+  const [showPast, setShowPast] = useState(false)
+
+  const upcoming = useMemo(() => triathlons.filter(t => !isPastDate(t.date)), [triathlons])
+  const past = useMemo(() => triathlons.filter(t => isPastDate(t.date)), [triathlons])
 
   const filtered = useMemo(() => {
-    let list = [...triathlons]
+    let list = [...(showPast ? past : upcoming)]
     if (filterFormat) list = list.filter(t => t.formats?.includes(filterFormat))
     if (sort === 'format') list.sort((a, b) => FORMAT_ORDER.indexOf(a.formats?.[0]) - FORMAT_ORDER.indexOf(b.formats?.[0]))
     return list
-  }, [triathlons, filterFormat, sort])
+  }, [upcoming, past, showPast, filterFormat, sort])
 
   const grouped = useMemo(() => {
     if (sort === 'date') return groupByMonth(filtered)
@@ -73,11 +82,9 @@ export default function App() {
       <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur-sm sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-water-500 rounded-lg flex items-center justify-center">
-              <Waves size={16} className="text-white" />
-            </div>
+            <img src={pscLogo} alt="Paris Sport Club" className="w-10 h-10 rounded-full object-cover border border-slate-700" />
             <div>
-              <h1 className="font-display font-bold text-xl text-white leading-none">TRI CLUB</h1>
+              <h1 className="font-display font-bold text-xl text-white leading-none">TRI CLUB PSC</h1>
               <p className="text-slate-500 text-xs">Calendrier de saison</p>
             </div>
           </div>
@@ -112,6 +119,14 @@ export default function App() {
               </button>
             ))}
           </div>
+
+          {/* Past/upcoming toggle */}
+          <button onClick={() => setShowPast(p => !p)}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-md border transition-colors ${
+              showPast ? 'bg-slate-700 text-white border-slate-600' : 'text-slate-500 border-slate-700 hover:text-white'
+            }`}>
+            <Archive size={12} /> {showPast ? `Anciens (${past.length})` : `Voir les anciens (${past.length})`}
+          </button>
 
           {/* Format filter */}
           <div className="flex items-center gap-1 ml-auto">

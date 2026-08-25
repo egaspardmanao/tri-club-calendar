@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        water: { 50: '#eef9ff', 100: '#d9f1ff', 200: '#b3e6ff', 300: '#6dd2ff', 400: '#36bdff', 500: '#0ca6f4', 600: '#0086d0', 700: '#016aa8', 800: '#065a8a', 900: '#0b4c71' },
+        water: { 50: '#fef2f2', 100: '#fee2e2', 200: '#fecaca', 300: '#fca5a5', 400: '#f87171', 500: '#dc2626', 600: '#b91c1c', 700: '#991b1b', 800: '#7f1d1d', 900: '#5c1414' },
         slate: { 850: '#1a2332' },
       },
       fontFamily: {

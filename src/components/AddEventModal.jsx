@@ -7,8 +7,13 @@ import FormatBadge from './FormatBadge'
 const GEOCODE_URL = (q) =>
   `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)},France&format=json&limit=1`
 
-export default function AddEventModal({ onClose, onAdded }) {
-  const [form, setForm] = useState({
+export default function AddEventModal({ onClose, onAdded, editing = null }) {
+  const [form, setForm] = useState(editing ? {
+    name: editing.name || '', city: editing.city || '', date: editing.date || '',
+    website: editing.website || '', register_url: editing.register_url || '',
+    whatsapp_url: editing.whatsapp_url || '', comment: editing.comment || '',
+    formats: editing.formats || [],
+  } : {
     name: '', city: '', date: '', website: '', register_url: '',
     whatsapp_url: '', comment: '', formats: [],
   })
@@ -33,15 +38,17 @@ export default function AddEventModal({ onClose, onAdded }) {
     setSaving(true)
     setError('')
 
-    // Géocoder la ville
-    let lat = null, lng = null
-    try {
-      const res = await fetch(GEOCODE_URL(form.city))
-      const data = await res.json()
-      if (data.length > 0) { lat = parseFloat(data[0].lat); lng = parseFloat(data[0].lon) }
-    } catch (_) {}
+    // Géocoder la ville si elle a changé (ou si nouvel événement)
+    let lat = editing?.lat ?? null, lng = editing?.lng ?? null
+    if (!editing || editing.city !== form.city.trim()) {
+      try {
+        const res = await fetch(GEOCODE_URL(form.city))
+        const data = await res.json()
+        if (data.length > 0) { lat = parseFloat(data[0].lat); lng = parseFloat(data[0].lon) }
+      } catch (_) {}
+    }
 
-    const { error } = await supabase.from('triathlons').insert({
+    const payload = {
       name: form.name.trim(),
       city: form.city.trim(),
       date: form.date,
@@ -51,9 +58,13 @@ export default function AddEventModal({ onClose, onAdded }) {
       comment: form.comment || null,
       formats: form.formats,
       lat, lng,
-    })
+    }
 
-    if (error) { setError("Erreur lors de l'ajout."); setSaving(false); return }
+    const { error } = editing
+      ? await supabase.from('triathlons').update(payload).eq('id', editing.id)
+      : await supabase.from('triathlons').insert(payload)
+
+    if (error) { setError("Erreur lors de l'enregistrement."); setSaving(false); return }
     setSaving(false)
     onAdded()
   }
@@ -62,7 +73,7 @@ export default function AddEventModal({ onClose, onAdded }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <div className="card w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 border-b border-slate-800">
-          <h2 className="font-display font-bold text-xl text-white">Ajouter un triathlon</h2>
+          <h2 className="font-display font-bold text-xl text-white">{editing ? 'Modifier le triathlon' : 'Ajouter un triathlon'}</h2>
           <button onClick={onClose} className="text-slate-500 hover:text-white p-1 transition-colors"><X size={20} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
@@ -127,7 +138,7 @@ export default function AddEventModal({ onClose, onAdded }) {
           <div className="flex gap-2 pt-1">
             <button type="button" onClick={onClose} className="btn-ghost flex-1">Annuler</button>
             <button type="submit" className="btn-primary flex-1" disabled={saving}>
-              {saving ? 'Géolocalisation & sauvegarde…' : 'Ajouter le triathlon'}
+              {saving ? 'Enregistrement…' : editing ? 'Enregistrer' : 'Ajouter le triathlon'}
             </button>
           </div>
         </form>

@@ -1,8 +1,9 @@
-import { format } from 'date-fns'
+import { format, addYears } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { X, Globe, ClipboardList, MessageCircle, Users, Plus } from 'lucide-react'
+import { X, Globe, ClipboardList, MessageCircle, Users, Plus, Pencil, Trash2, CalendarClock } from 'lucide-react'
 import { useState } from 'react'
 import FormatBadge from './FormatBadge'
+import AddEventModal from './AddEventModal'
 import { FORMAT_ORDER } from '../lib/formats'
 import { supabase } from '../lib/supabase'
 
@@ -11,6 +12,10 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
   const [participantFormat, setParticipantFormat] = useState(triathlon.formats?.[0] || 'M')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [editing, setEditing] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+
+  const isPast = triathlon.date ? new Date(triathlon.date) < new Date().setHours(0, 0, 0, 0) : false
 
   const dateLabel = triathlon.date
     ? format(new Date(triathlon.date), 'EEEE d MMMM yyyy', { locale: fr })
@@ -37,6 +42,33 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
     onUpdated()
   }
 
+  async function handleRemoveParticipant(participantId) {
+    await supabase.from('participants').delete().eq('id', participantId)
+    onUpdated()
+  }
+
+  async function handleDelete() {
+    await supabase.from('triathlons').delete().eq('id', triathlon.id)
+    onUpdated()
+    onClose()
+  }
+
+  async function handleReschedule() {
+    const nextDate = format(addYears(new Date(triathlon.date), 1), 'yyyy-MM-dd')
+    await supabase.from('triathlons').update({ date: nextDate }).eq('id', triathlon.id)
+    onUpdated()
+  }
+
+  if (editing) {
+    return (
+      <AddEventModal
+        editing={triathlon}
+        onClose={() => setEditing(false)}
+        onAdded={() => { setEditing(false); onUpdated() }}
+      />
+    )
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <div
@@ -46,12 +78,42 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
         {/* Header */}
         <div className="flex items-start justify-between p-5 border-b border-slate-800">
           <div>
+            {isPast && (
+              <span className="inline-block mb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-800 rounded px-1.5 py-0.5">
+                Ancien triathlon
+              </span>
+            )}
             <h2 className="font-display font-bold text-2xl text-white">{triathlon.name}</h2>
             <p className="text-slate-400 text-sm mt-1 capitalize">{dateLabel}</p>
             <p className="text-slate-500 text-sm">{triathlon.city}</p>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-white p-1 transition-colors"><X size={20} /></button>
+          <div className="flex items-center gap-1">
+            <button onClick={() => setEditing(true)} title="Modifier"
+              className="text-slate-500 hover:text-white p-1.5 transition-colors"><Pencil size={16} /></button>
+            <button onClick={() => setConfirmDelete(true)} title="Supprimer"
+              className="text-slate-500 hover:text-red-400 p-1.5 transition-colors"><Trash2 size={16} /></button>
+            <button onClick={onClose} className="text-slate-500 hover:text-white p-1.5 transition-colors"><X size={20} /></button>
+          </div>
         </div>
+
+        {confirmDelete && (
+          <div className="mx-5 mt-4 bg-red-950/40 border border-red-900 rounded-lg p-3 flex items-center justify-between gap-3">
+            <p className="text-sm text-red-300">Supprimer définitivement ce triathlon ?</p>
+            <div className="flex gap-2 shrink-0">
+              <button onClick={() => setConfirmDelete(false)} className="btn-ghost text-xs px-2 py-1">Annuler</button>
+              <button onClick={handleDelete} className="bg-red-600 hover:bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-lg transition-colors">Supprimer</button>
+            </div>
+          </div>
+        )}
+
+        {isPast && !confirmDelete && (
+          <div className="mx-5 mt-4 bg-slate-800/60 border border-slate-700 rounded-lg p-3 flex items-center justify-between gap-3">
+            <p className="text-sm text-slate-300">Reprogrammer l'édition de l'année prochaine ?</p>
+            <button onClick={handleReschedule} className="btn-primary text-xs px-2.5 py-1.5 flex items-center gap-1.5 shrink-0">
+              <CalendarClock size={12} /> Reprogrammer
+            </button>
+          </div>
+        )}
 
         <div className="p-5 space-y-5">
           {/* Formats */}
@@ -96,10 +158,14 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
             <div className="label flex items-center gap-1.5"><Users size={12} /> Participants ({triathlon.participants?.length || 0})</div>
             {triathlon.participants?.length > 0 ? (
               <div className="flex flex-wrap gap-2 mb-3">
-                {triathlon.participants.map((p, i) => (
-                  <div key={i} className="flex items-center gap-1.5 bg-slate-800 rounded-full px-3 py-1 text-sm">
+                {triathlon.participants.map((p) => (
+                  <div key={p.id} className="flex items-center gap-1.5 bg-slate-800 rounded-full pl-3 pr-1.5 py-1 text-sm">
                     <span className="text-white">{p.name}</span>
                     <FormatBadge format={p.format} />
+                    <button onClick={() => handleRemoveParticipant(p.id)} title="Annuler la participation"
+                      className="text-slate-500 hover:text-red-400 transition-colors p-0.5">
+                      <X size={12} />
+                    </button>
                   </div>
                 ))}
               </div>
