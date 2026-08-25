@@ -13,10 +13,10 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
     end_date: editing.end_date || '',
     website: editing.website || '', register_url: editing.register_url || '',
     whatsapp_url: editing.whatsapp_url || '', comment: editing.comment || '',
-    formats: editing.formats || [],
+    formats: editing.formats || [], is_club_event: editing.is_club_event || false,
   } : {
     name: '', city: '', date: '', end_date: '', website: '', register_url: '',
-    whatsapp_url: '', comment: '', formats: [],
+    whatsapp_url: '', comment: '', formats: [], is_club_event: false,
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -59,6 +59,7 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
       whatsapp_url: form.whatsapp_url || null,
       comment: form.comment || null,
       formats: form.formats,
+      is_club_event: form.is_club_event,
       lat, lng,
     }
 
@@ -140,6 +141,15 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
             <textarea className="input resize-none" rows={3} placeholder="Infos pratiques pour le groupe…"
               value={form.comment} onChange={e => setForm(f => ({...f, comment: e.target.value}))} />
           </div>
+
+          <label className="flex items-center gap-2.5 bg-slate-800/40 rounded-lg p-3 cursor-pointer">
+            <input type="checkbox" checked={form.is_club_event}
+              onChange={e => setForm(f => ({...f, is_club_event: e.target.checked}))}
+              className="w-4 h-4 accent-water-500 cursor-pointer" />
+            <span className="text-sm text-slate-200">
+              Événement club <span className="text-slate-500">(logistique organisée : covoit, logement, inscriptions mutualisées…)</span>
+            </span>
+          </label>
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <div className="flex gap-2 pt-1">

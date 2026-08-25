@@ -15,6 +15,7 @@ create table if not exists triathlons (
   register_url text,
   whatsapp_url text,
   comment     text,
+  is_club_event boolean not null default false,
   created_at  timestamptz default now()
 );
 
@@ -57,6 +58,7 @@ create policy "Suppression publique participants"
   on participants for delete using (true);
 
 alter table triathlons add column if not exists end_date date;
+alter table triathlons add column if not exists is_club_event boolean not null default false;
 
 -- Données de test (optionnel, à supprimer en prod)
 insert into triathlons (name, city, date, lat, lng, formats, website, comment)

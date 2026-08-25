@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { Globe, ClipboardList, MessageCircle, Users, ChevronRight } from 'lucide-react'
+import { Globe, ClipboardList, MessageCircle, Users, ChevronRight, ShieldCheck } from 'lucide-react'
 import FormatBadge from './FormatBadge'
 
 export default function EventCard({ triathlon, onClick }) {
@@ -17,8 +17,13 @@ export default function EventCard({ triathlon, onClick }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <div className="font-display font-bold text-lg text-white leading-tight truncate group-hover:text-water-300 transition-colors">
-            {triathlon.name}
+          <div className="flex items-center gap-1.5">
+            <div className="font-display font-bold text-lg text-white leading-tight truncate group-hover:text-water-300 transition-colors">
+              {triathlon.name}
+            </div>
+            {triathlon.is_club_event && (
+              <ShieldCheck size={14} className="text-water-400 shrink-0" title="Événement club" />
+            )}
           </div>
           <div className="text-slate-400 text-sm mt-0.5">{triathlon.city} · {dateLabel}</div>
         </div>

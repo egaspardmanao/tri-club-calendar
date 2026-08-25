@@ -65,7 +65,12 @@ export default function TriathlonMap({ triathlons, onSelect }) {
               <div className="min-w-[220px]">
                 {group.events.map((t, j) => (
                   <div key={j} className={j > 0 ? 'border-t border-slate-700 pt-2 mt-2' : ''}>
-                    <div className="font-display font-bold text-base text-white mb-1">{t.name}</div>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <div className="font-display font-bold text-base text-white">{t.name}</div>
+                      {t.is_club_event && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-water-300 bg-water-900/60 rounded px-1 py-0.5">Club</span>
+                      )}
+                    </div>
                     <div className="text-slate-400 text-xs mb-2">
                       {t.date
                         ? t.end_date && t.end_date !== t.date

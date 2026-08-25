@@ -1,6 +1,6 @@
 import { format, addYears } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { X, Globe, ClipboardList, MessageCircle, Users, Plus, Pencil, Trash2, CalendarClock } from 'lucide-react'
+import { X, Globe, ClipboardList, MessageCircle, Users, Plus, Pencil, Trash2, CalendarClock, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
 import FormatBadge from './FormatBadge'
 import AddEventModal from './AddEventModal'
@@ -84,11 +84,18 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
         {/* Header */}
         <div className="flex items-start justify-between p-5 border-b border-slate-800">
           <div>
-            {isPast && (
-              <span className="inline-block mb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-800 rounded px-1.5 py-0.5">
-                Ancien triathlon
-              </span>
-            )}
+            <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
+              {isPast && (
+                <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-800 rounded px-1.5 py-0.5">
+                  Ancien triathlon
+                </span>
+              )}
+              {triathlon.is_club_event && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-water-300 bg-water-900/60 rounded px-1.5 py-0.5">
+                  <ShieldCheck size={10} /> Événement club
+                </span>
+              )}
+            </div>
             <h2 className="font-display font-bold text-2xl text-white">{triathlon.name}</h2>
             <p className="text-slate-400 text-sm mt-1 capitalize">{dateLabel}</p>
             <p className="text-slate-500 text-sm">{triathlon.city}</p>
