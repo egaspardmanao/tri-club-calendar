@@ -1,0 +1,54 @@
+-- Schéma Supabase pour le club de triathlon
+-- À coller dans l'éditeur SQL de votre projet Supabase
+
+-- Table principale : événements triathlon
+create table if not exists triathlons (
+  id          uuid primary key default gen_random_uuid(),
+  name        text not null,
+  city        text not null,
+  date        date,
+  lat         double precision,
+  lng         double precision,
+  formats     text[] not null default '{}',   -- ['XS','M','XL']
+  website     text,
+  register_url text,
+  whatsapp_url text,
+  comment     text,
+  created_at  timestamptz default now()
+);
+
+-- Table participants : une ligne = une personne sur un format d'un triathlon
+create table if not exists participants (
+  id             uuid primary key default gen_random_uuid(),
+  triathlon_id   uuid not null references triathlons(id) on delete cascade,
+  name           text not null,
+  format         text not null,    -- le format choisi par ce participant
+  created_at     timestamptz default now()
+);
+
+-- Index pour les requêtes fréquentes
+create index if not exists idx_triathlons_date on triathlons(date);
+create index if not exists idx_participants_triathlon on participants(triathlon_id);
+
+-- Activer Row Level Security (lecture publique, écriture publique car pas d'auth)
+alter table triathlons enable row level security;
+alter table participants enable row level security;
+
+create policy "Lecture publique triathlons"
+  on triathlons for select using (true);
+
+create policy "Ecriture publique triathlons"
+  on triathlons for insert with check (true);
+
+create policy "Lecture publique participants"
+  on participants for select using (true);
+
+create policy "Ecriture publique participants"
+  on participants for insert with check (true);
+
+-- Données de test (optionnel, à supprimer en prod)
+insert into triathlons (name, city, date, lat, lng, formats, website, comment)
+values
+  ('Triathlon de Nice', 'Nice', '2027-04-18', 43.7102, 7.2620, ARRAY['S','M','XL'], 'https://triathlondenice.com', 'Inscriptions ouvertes en janvier. Covoit possible depuis Paris.'),
+  ('Triathlon de Paris', 'Paris', '2027-06-13', 48.8566, 2.3522, ARRAY['XS','S','M'], null, null),
+  ('L''Embrunman', 'Embrun', '2027-08-09', 44.5634, 6.4957, ARRAY['XXL'], 'https://embrunman.com', 'Légendaire. Réservez l''hébergement très tôt !');
