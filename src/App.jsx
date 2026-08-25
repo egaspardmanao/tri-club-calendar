@@ -66,14 +66,13 @@ export default function App() {
     return { 'Tous': filtered }
   }, [filtered, sort])
 
-  const handleUpdated = () => {
-    refetch()
-    setSelected(null)
-    setTimeout(() => {
-      const updated = triathlons.find(t => t.id === selected?.id)
-      if (updated) setSelected(updated)
-      refetch().then(() => {})
-    }, 300)
+  const handleUpdated = async () => {
+    const fresh = await refetch()
+    setSelected(prev => {
+      if (!prev) return prev
+      const updated = fresh?.find(t => t.id === prev.id)
+      return updated || null
+    })
   }
 
   return (

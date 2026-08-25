@@ -13,6 +13,7 @@ export function useTriathlons() {
       .order('date', { ascending: true })
     if (!error) setTriathlons(data || [])
     setLoading(false)
+    return data || []
   }, [])
 
   useEffect(() => { fetch() }, [fetch])
