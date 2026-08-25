@@ -2,7 +2,6 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { useMemo } from 'react'
 import FormatBadge from './FormatBadge'
-import { FORMATS } from '../lib/formats'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
@@ -28,9 +27,8 @@ function createColorIcon(color) {
   })
 }
 
-const FORMAT_COLORS = {
-  XS: '#10b981', S: '#14b8a6', M: '#0ca6f4', L: '#3b82f6', XL: '#8b5cf6', XXL: '#f97316',
-}
+const PSC_RED = '#b91c1c'
+const PSC_BLACK = '#211b17'
 
 function groupByLocation(triathlons) {
   const map = {}
@@ -57,8 +55,8 @@ export default function TriathlonMap({ triathlons, onSelect }) {
         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
       {groups.map((group, i) => {
-        const mainFormat = group.events[0]?.formats?.[0] || 'M'
-        const color = FORMAT_COLORS[mainFormat] || '#0ca6f4'
+        const hasClubEvent = group.events.some(t => t.is_club_event)
+        const color = hasClubEvent ? PSC_RED : PSC_BLACK
         return (
           <Marker key={i} position={[group.lat, group.lng]} icon={createColorIcon(color)}>
             <Popup>
