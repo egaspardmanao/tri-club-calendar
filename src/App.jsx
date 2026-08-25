@@ -80,25 +80,25 @@ export default function App() {
     <div className="min-h-screen bg-slate-950 flex flex-col">
       {/* Header */}
       <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur-sm sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={pscLogo} alt="Paris Sport Club" className="w-10 h-10 rounded-full object-cover border border-slate-700" />
-            <div>
-              <h1 className="font-display font-bold text-xl text-white leading-none">TRI CLUB PSC</h1>
-              <p className="text-slate-500 text-xs">Calendrier de saison</p>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <img src={pscLogo} alt="Paris Sport Club" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-slate-700 shrink-0" />
+            <div className="min-w-0">
+              <h1 className="font-display font-bold text-base sm:text-xl text-white leading-none truncate">TRI CLUB PSC</h1>
+              <p className="text-slate-500 text-xs hidden sm:block">Calendrier de saison</p>
             </div>
           </div>
-          <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-2 text-sm">
-            <Plus size={16} /> Ajouter un triathlon
+          <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 shrink-0">
+            <Plus size={16} /> <span className="hidden sm:inline">Ajouter un triathlon</span><span className="sm:hidden">Ajouter</span>
           </button>
         </div>
       </header>
 
       {/* Toolbar */}
       <div className="border-b border-slate-800 bg-slate-900/50">
-        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-3 flex-wrap">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2 flex items-center gap-2 sm:gap-3 overflow-x-auto sm:flex-wrap [-webkit-overflow-scrolling:touch]">
           {/* View toggle */}
-          <div className="flex rounded-lg overflow-hidden border border-slate-700">
+          <div className="flex rounded-lg overflow-hidden border border-slate-700 shrink-0">
             <button onClick={() => setView('map')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === 'map' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
               <Map size={12} /> Carte
@@ -110,11 +110,11 @@ export default function App() {
           </div>
 
           {/* Sort */}
-          <div className="flex items-center gap-1.5">
-            <SlidersHorizontal size={12} className="text-slate-500" />
+          <div className="flex items-center gap-1.5 shrink-0">
+            <SlidersHorizontal size={12} className="text-slate-500 hidden sm:block" />
             {SORT_OPTIONS.map(o => (
               <button key={o.value} onClick={() => setSort(o.value)}
-                className={`px-2.5 py-1 text-xs rounded-md transition-colors ${sort === o.value ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
+                className={`px-2.5 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${sort === o.value ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
                 {o.label}
               </button>
             ))}
@@ -122,16 +122,16 @@ export default function App() {
 
           {/* Past/upcoming toggle */}
           <button onClick={() => setShowPast(p => !p)}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-md border transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-md border transition-colors shrink-0 whitespace-nowrap ${
               showPast ? 'bg-slate-700 text-white border-slate-600' : 'text-slate-500 border-slate-700 hover:text-white'
             }`}>
-            <Archive size={12} /> {showPast ? `Anciens (${past.length})` : `Voir les anciens (${past.length})`}
+            <Archive size={12} /> {showPast ? `Anciens (${past.length})` : `Anciens (${past.length})`}
           </button>
 
           {/* Format filter */}
-          <div className="flex items-center gap-1 ml-auto">
+          <div className="flex items-center gap-1 sm:ml-auto shrink-0">
             <button onClick={() => setFilterFormat(null)}
-              className={`px-2.5 py-1 text-xs rounded-md transition-colors ${!filterFormat ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
+              className={`px-2.5 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${!filterFormat ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
               Tous
             </button>
             {FORMAT_ORDER.map(f => (
@@ -145,17 +145,17 @@ export default function App() {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-4">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-4 py-4">
         {loading ? (
           <div className="flex items-center justify-center h-64 text-slate-500">Chargement…</div>
         ) : view === 'map' ? (
-          <div className="flex gap-4 h-[calc(100vh-160px)]">
+          <div className="flex flex-col sm:flex-row gap-4 sm:h-[calc(100vh-160px)]">
             {/* Map */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 h-[50vh] sm:h-auto">
               <TriathlonMap triathlons={filtered} onSelect={setSelected} />
             </div>
             {/* Sidebar list on map view */}
-            <div className="w-72 shrink-0 overflow-y-auto space-y-2 pr-1">
+            <div className="w-full sm:w-72 shrink-0 sm:overflow-y-auto space-y-2 sm:pr-1">
               {Object.entries(grouped).map(([group, items]) => (
                 items.length > 0 && (
                   <div key={group}>

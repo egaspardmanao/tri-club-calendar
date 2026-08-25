@@ -76,13 +76,13 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="card w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="card w-full h-full sm:h-auto max-w-lg sm:max-h-[90vh] overflow-y-auto sm:rounded-xl rounded-none"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-5 border-b border-slate-800">
+        <div className="flex items-start justify-between p-4 sm:p-5 border-b border-slate-800 sticky top-0 bg-slate-900 z-10">
           <div>
             <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
               {isPast && (
@@ -110,7 +110,7 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
         </div>
 
         {confirmDelete && (
-          <div className="mx-5 mt-4 bg-red-950/40 border border-red-900 rounded-lg p-3 flex items-center justify-between gap-3">
+          <div className="mx-4 sm:mx-5 mt-4 bg-red-950/40 border border-red-900 rounded-lg p-3 flex items-center justify-between gap-3">
             <p className="text-sm text-red-300">Supprimer définitivement ce triathlon ?</p>
             <div className="flex gap-2 shrink-0">
               <button onClick={() => setConfirmDelete(false)} className="btn-ghost text-xs px-2 py-1">Annuler</button>
@@ -120,7 +120,7 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
         )}
 
         {isPast && !confirmDelete && (
-          <div className="mx-5 mt-4 bg-slate-800/60 border border-slate-700 rounded-lg p-3 flex items-center justify-between gap-3">
+          <div className="mx-4 sm:mx-5 mt-4 bg-slate-800/60 border border-slate-700 rounded-lg p-3 flex items-center justify-between gap-3">
             <p className="text-sm text-slate-300">Reprogrammer l'édition de l'année prochaine ?</p>
             <button onClick={handleReschedule} className="btn-primary text-xs px-2.5 py-1.5 flex items-center gap-1.5 shrink-0">
               <CalendarClock size={12} /> Reprogrammer
@@ -128,7 +128,7 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
           </div>
         )}
 
-        <div className="p-5 space-y-5">
+        <div className="p-4 sm:p-5 space-y-5">
           {/* Formats */}
           <div>
             <div className="label">Formats proposés</div>

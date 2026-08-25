@@ -73,13 +73,13 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
-      <div className="card w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between p-5 border-b border-slate-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+      <div className="card w-full h-full sm:h-auto max-w-lg sm:max-h-[90vh] overflow-y-auto sm:rounded-xl rounded-none" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-800 sticky top-0 bg-slate-900 z-10">
           <h2 className="font-display font-bold text-xl text-white">{editing ? 'Modifier le triathlon' : 'Ajouter un triathlon'}</h2>
           <button onClick={onClose} className="text-slate-500 hover:text-white p-1 transition-colors"><X size={20} /></button>
         </div>
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
               <label className="label">Nom de l'événement *</label>
