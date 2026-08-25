@@ -15,10 +15,13 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
   const [editing, setEditing] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
-  const isPast = triathlon.date ? new Date(triathlon.date) < new Date().setHours(0, 0, 0, 0) : false
+  const referenceDate = triathlon.end_date || triathlon.date
+  const isPast = referenceDate ? new Date(referenceDate) < new Date().setHours(0, 0, 0, 0) : false
 
   const dateLabel = triathlon.date
-    ? format(new Date(triathlon.date), 'EEEE d MMMM yyyy', { locale: fr })
+    ? triathlon.end_date && triathlon.end_date !== triathlon.date
+      ? `Du ${format(new Date(triathlon.date), 'd MMMM', { locale: fr })} au ${format(new Date(triathlon.end_date), 'd MMMM yyyy', { locale: fr })}`
+      : format(new Date(triathlon.date), 'EEEE d MMMM yyyy', { locale: fr })
     : 'Date inconnue'
 
   const alreadyIn = triathlon.participants?.find(
@@ -55,7 +58,10 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
 
   async function handleReschedule() {
     const nextDate = format(addYears(new Date(triathlon.date), 1), 'yyyy-MM-dd')
-    await supabase.from('triathlons').update({ date: nextDate }).eq('id', triathlon.id)
+    const nextEndDate = triathlon.end_date
+      ? format(addYears(new Date(triathlon.end_date), 1), 'yyyy-MM-dd')
+      : null
+    await supabase.from('triathlons').update({ date: nextDate, end_date: nextEndDate }).eq('id', triathlon.id)
     onUpdated()
   }
 

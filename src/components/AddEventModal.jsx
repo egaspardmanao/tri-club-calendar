@@ -10,11 +10,12 @@ const GEOCODE_URL = (q) =>
 export default function AddEventModal({ onClose, onAdded, editing = null }) {
   const [form, setForm] = useState(editing ? {
     name: editing.name || '', city: editing.city || '', date: editing.date || '',
+    end_date: editing.end_date || '',
     website: editing.website || '', register_url: editing.register_url || '',
     whatsapp_url: editing.whatsapp_url || '', comment: editing.comment || '',
     formats: editing.formats || [],
   } : {
-    name: '', city: '', date: '', website: '', register_url: '',
+    name: '', city: '', date: '', end_date: '', website: '', register_url: '',
     whatsapp_url: '', comment: '', formats: [],
   })
   const [saving, setSaving] = useState(false)
@@ -52,6 +53,7 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
       name: form.name.trim(),
       city: form.city.trim(),
       date: form.date,
+      end_date: form.end_date || null,
       website: form.website || null,
       register_url: form.register_url || null,
       whatsapp_url: form.whatsapp_url || null,
@@ -89,9 +91,14 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
                 onChange={e => setForm(f => ({...f, city: e.target.value}))} required />
             </div>
             <div>
-              <label className="label">Date *</label>
+              <label className="label">Date de début *</label>
               <input className="input" type="date" value={form.date}
                 onChange={e => setForm(f => ({...f, date: e.target.value}))} required />
+            </div>
+            <div className="col-span-2">
+              <label className="label">Date de fin (si événement sur plusieurs jours)</label>
+              <input className="input" type="date" value={form.end_date} min={form.date || undefined}
+                onChange={e => setForm(f => ({...f, end_date: e.target.value}))} />
             </div>
           </div>
 

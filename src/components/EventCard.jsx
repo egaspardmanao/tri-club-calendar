@@ -5,7 +5,9 @@ import FormatBadge from './FormatBadge'
 
 export default function EventCard({ triathlon, onClick }) {
   const dateLabel = triathlon.date
-    ? format(new Date(triathlon.date), 'd MMM yyyy', { locale: fr })
+    ? triathlon.end_date && triathlon.end_date !== triathlon.date
+      ? `${format(new Date(triathlon.date), 'd', { locale: fr })}-${format(new Date(triathlon.end_date), 'd MMM yyyy', { locale: fr })}`
+      : format(new Date(triathlon.date), 'd MMM yyyy', { locale: fr })
     : 'Date inconnue'
 
   return (

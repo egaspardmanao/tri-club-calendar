@@ -7,6 +7,7 @@ create table if not exists triathlons (
   name        text not null,
   city        text not null,
   date        date,
+  end_date    date,
   lat         double precision,
   lng         double precision,
   formats     text[] not null default '{}',   -- ['XS','M','XL']
@@ -54,6 +55,8 @@ create policy "Suppression publique triathlons"
 
 create policy "Suppression publique participants"
   on participants for delete using (true);
+
+alter table triathlons add column if not exists end_date date;
 
 -- Données de test (optionnel, à supprimer en prod)
 insert into triathlons (name, city, date, lat, lng, formats, website, comment)

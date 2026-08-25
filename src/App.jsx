@@ -10,8 +10,9 @@ import { useTriathlons } from './hooks/useTriathlons'
 import { FORMAT_ORDER } from './lib/formats'
 import pscLogo from './assets/psc-logo.jpeg'
 
-function isPastDate(date) {
-  return date ? new Date(date) < new Date().setHours(0, 0, 0, 0) : false
+function isPastDate(triathlon) {
+  const ref = triathlon.end_date || triathlon.date
+  return ref ? new Date(ref) < new Date().setHours(0, 0, 0, 0) : false
 }
 
 const SORT_OPTIONS = [
@@ -50,8 +51,8 @@ export default function App() {
   const [addOpen, setAddOpen] = useState(false)
   const [showPast, setShowPast] = useState(false)
 
-  const upcoming = useMemo(() => triathlons.filter(t => !isPastDate(t.date)), [triathlons])
-  const past = useMemo(() => triathlons.filter(t => isPastDate(t.date)), [triathlons])
+  const upcoming = useMemo(() => triathlons.filter(t => !isPastDate(t)), [triathlons])
+  const past = useMemo(() => triathlons.filter(t => isPastDate(t)), [triathlons])
 
   const filtered = useMemo(() => {
     let list = [...(showPast ? past : upcoming)]

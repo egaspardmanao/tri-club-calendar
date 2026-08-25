@@ -67,7 +67,11 @@ export default function TriathlonMap({ triathlons, onSelect }) {
                   <div key={j} className={j > 0 ? 'border-t border-slate-700 pt-2 mt-2' : ''}>
                     <div className="font-display font-bold text-base text-white mb-1">{t.name}</div>
                     <div className="text-slate-400 text-xs mb-2">
-                      {t.date ? format(new Date(t.date), 'd MMMM yyyy', { locale: fr }) : ''}
+                      {t.date
+                        ? t.end_date && t.end_date !== t.date
+                          ? `Du ${format(new Date(t.date), 'd MMMM', { locale: fr })} au ${format(new Date(t.end_date), 'd MMMM yyyy', { locale: fr })}`
+                          : format(new Date(t.date), 'd MMMM yyyy', { locale: fr })
+                        : ''}
                     </div>
                     <div className="flex flex-wrap gap-1 mb-2">
                       {t.formats?.map(f => <FormatBadge key={f} format={f} />)}
