@@ -147,7 +147,7 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
               onChange={e => setForm(f => ({...f, is_club_event: e.target.checked}))}
               className="w-4 h-4 accent-water-500 cursor-pointer" />
             <span className="text-sm text-slate-200">
-              Événement club <span className="text-slate-500">(logistique organisée : covoit, logement, inscriptions mutualisées…)</span>
+              Événement club <span className="text-slate-500">(logistique facilitée : covoit, logement, inscriptions…)</span>
             </span>
           </label>
 
