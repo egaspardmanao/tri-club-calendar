@@ -46,6 +46,15 @@ create policy "Lecture publique participants"
 create policy "Ecriture publique participants"
   on participants for insert with check (true);
 
+create policy "Modification publique triathlons"
+  on triathlons for update using (true) with check (true);
+
+create policy "Suppression publique triathlons"
+  on triathlons for delete using (true);
+
+create policy "Suppression publique participants"
+  on participants for delete using (true);
+
 -- Données de test (optionnel, à supprimer en prod)
 insert into triathlons (name, city, date, lat, lng, formats, website, comment)
 values
