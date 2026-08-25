@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { Map, List, SlidersHorizontal, Plus, Archive } from 'lucide-react'
+import { Map, List, SlidersHorizontal, Plus, Archive, Ticket } from 'lucide-react'
 import TriathlonMap from './components/TriathlonMap'
 import EventCard from './components/EventCard'
 import EventModal from './components/EventModal'
 import AddEventModal from './components/AddEventModal'
+import BibExchange from './components/BibExchange'
 import { useTriathlons } from './hooks/useTriathlons'
 import { FORMAT_ORDER } from './lib/formats'
 import pscLogo from './assets/psc-logo.jpeg'
@@ -44,7 +45,7 @@ function groupByFormat(triathlons) {
 
 export default function App() {
   const { triathlons, loading, refetch } = useTriathlons()
-  const [view, setView] = useState('map') // 'map' | 'list'
+  const [view, setView] = useState('map') // 'map' | 'list' | 'bibs'
   const [sort, setSort] = useState('date')
   const [filterFormat, setFilterFormat] = useState(null)
   const [selected, setSelected] = useState(null)
@@ -88,9 +89,11 @@ export default function App() {
               <p className="text-slate-500 text-xs hidden sm:block">Calendrier de saison</p>
             </div>
           </div>
-          <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 shrink-0">
-            <Plus size={16} /> <span className="hidden sm:inline">Ajouter un triathlon</span><span className="sm:hidden">Ajouter</span>
-          </button>
+          {view !== 'bibs' && (
+            <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 shrink-0">
+              <Plus size={16} /> <span className="hidden sm:inline">Ajouter un triathlon</span><span className="sm:hidden">Ajouter</span>
+            </button>
+          )}
         </div>
       </header>
 
@@ -107,46 +110,56 @@ export default function App() {
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === 'list' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
               <List size={12} /> Liste
             </button>
-          </div>
-
-          {/* Sort */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            <SlidersHorizontal size={12} className="text-slate-500 hidden sm:block" />
-            {SORT_OPTIONS.map(o => (
-              <button key={o.value} onClick={() => setSort(o.value)}
-                className={`px-2.5 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${sort === o.value ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
-                {o.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Past/upcoming toggle */}
-          <button onClick={() => setShowPast(p => !p)}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-md border transition-colors shrink-0 whitespace-nowrap ${
-              showPast ? 'bg-slate-700 text-white border-slate-600' : 'text-slate-500 border-slate-700 hover:text-white'
-            }`}>
-            <Archive size={12} /> {showPast ? `Anciens (${past.length})` : `Anciens (${past.length})`}
-          </button>
-
-          {/* Format filter */}
-          <div className="flex items-center gap-1 sm:ml-auto shrink-0">
-            <button onClick={() => setFilterFormat(null)}
-              className={`px-2.5 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${!filterFormat ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
-              Tous
+            <button onClick={() => setView('bibs')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === 'bibs' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
+              <Ticket size={12} /> Bourse
             </button>
-            {FORMAT_ORDER.map(f => (
-              <button key={f} onClick={() => setFilterFormat(filterFormat === f ? null : f)}
-                className={`format-badge cursor-pointer transition-opacity ${filterFormat && filterFormat !== f ? 'opacity-30' : 'opacity-100'}`}>
-                {f}
-              </button>
-            ))}
           </div>
+
+          {view !== 'bibs' && (
+            <>
+              {/* Sort */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <SlidersHorizontal size={12} className="text-slate-500 hidden sm:block" />
+                {SORT_OPTIONS.map(o => (
+                  <button key={o.value} onClick={() => setSort(o.value)}
+                    className={`px-2.5 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${sort === o.value ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Past/upcoming toggle */}
+              <button onClick={() => setShowPast(p => !p)}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-md border transition-colors shrink-0 whitespace-nowrap ${
+                  showPast ? 'bg-slate-700 text-white border-slate-600' : 'text-slate-500 border-slate-700 hover:text-white'
+                }`}>
+                <Archive size={12} /> {showPast ? `Anciens (${past.length})` : `Anciens (${past.length})`}
+              </button>
+
+              {/* Format filter */}
+              <div className="flex items-center gap-1 sm:ml-auto shrink-0">
+                <button onClick={() => setFilterFormat(null)}
+                  className={`px-2.5 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${!filterFormat ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
+                  Tous
+                </button>
+                {FORMAT_ORDER.map(f => (
+                  <button key={f} onClick={() => setFilterFormat(filterFormat === f ? null : f)}
+                    className={`format-badge cursor-pointer transition-opacity ${filterFormat && filterFormat !== f ? 'opacity-30' : 'opacity-100'}`}>
+                    {f}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
       {/* Main content */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-4 py-4">
-        {loading ? (
+        {view === 'bibs' ? (
+          <BibExchange triathlons={triathlons} />
+        ) : loading ? (
           <div className="flex items-center justify-center h-64 text-slate-500">Chargement…</div>
         ) : view === 'map' ? (
           <div className="flex flex-col sm:flex-row gap-4 sm:h-[calc(100vh-160px)]">

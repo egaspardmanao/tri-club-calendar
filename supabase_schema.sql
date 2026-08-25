@@ -28,13 +28,38 @@ create table if not exists participants (
   created_at     timestamptz default now()
 );
 
+-- Table bourse aux dossards : un dossard à céder pour un format d'un triathlon
+create table if not exists bib_transfers (
+  id            uuid primary key default gen_random_uuid(),
+  triathlon_id  uuid not null references triathlons(id) on delete cascade,
+  format        text not null,
+  seller_name   text not null,
+  contact       text not null,   -- téléphone, email ou @profil
+  status        text not null default 'available' check (status in ('available', 'taken')),
+  created_at    timestamptz default now()
+);
+
 -- Index pour les requêtes fréquentes
 create index if not exists idx_triathlons_date on triathlons(date);
 create index if not exists idx_participants_triathlon on participants(triathlon_id);
+create index if not exists idx_bib_transfers_triathlon on bib_transfers(triathlon_id);
 
 -- Activer Row Level Security (lecture publique, écriture publique car pas d'auth)
 alter table triathlons enable row level security;
 alter table participants enable row level security;
+alter table bib_transfers enable row level security;
+
+create policy "Lecture publique bib_transfers"
+  on bib_transfers for select using (true);
+
+create policy "Ecriture publique bib_transfers"
+  on bib_transfers for insert with check (true);
+
+create policy "Modification publique bib_transfers"
+  on bib_transfers for update using (true) with check (true);
+
+create policy "Suppression publique bib_transfers"
+  on bib_transfers for delete using (true);
 
 create policy "Lecture publique triathlons"
   on triathlons for select using (true);
@@ -59,6 +84,10 @@ create policy "Suppression publique participants"
 
 alter table triathlons add column if not exists end_date date;
 alter table triathlons add column if not exists is_club_event boolean not null default false;
+
+-- Migration bourse aux dossards (si triathlons/participants existent déjà) :
+-- exécuter uniquement le bloc "Table bourse aux dossards" et les 4 policies bib_transfers
+-- plus haut dans ce fichier (create table if not exists gère l'idempotence).
 
 -- Données de test (optionnel, à supprimer en prod)
 insert into triathlons (name, city, date, lat, lng, formats, website, comment)
