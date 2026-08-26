@@ -246,7 +246,7 @@ export default function EventModal({ triathlon, onClose, onUpdated, identity }) 
                 <div className="label mb-1.5">Ton statut</div>
                 <div className="flex rounded-lg overflow-hidden border border-slate-700">
                   <button type="button" onClick={() => setParticipantStatus('confirmed')}
-                    className={`flex-1 py-2 text-xs font-semibold transition-colors ${participantStatus === 'confirmed' ? 'bg-slate-700 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'}`}>
+                    className={`flex-1 py-2 text-xs font-semibold transition-colors ${participantStatus === 'confirmed' ? 'bg-amber-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'}`}>
                     ✓ Je suis inscrit·e
                   </button>
                   <button type="button" onClick={() => setParticipantStatus('interested')}
