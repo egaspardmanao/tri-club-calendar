@@ -391,6 +391,8 @@
       <a href="#club"><span class="num">06</span> Événements club</a>
       <a href="#anciens"><span class="num">07</span> Anciens triathlons</a>
       <a href="#dossards"><span class="num">08</span> Bourse aux dossards</a>
+      <a href="#calendrier"><span class="num">09</span> Export calendrier</a>
+      <a href="#stats"><span class="num">10</span> Statistiques</a>
     </nav>
   </header>
 
@@ -491,20 +493,24 @@
     </div>
     <div class="feature-body">
       <p>Sur la fiche d'un triathlon, indique ton prénom et le format choisi, puis valide. Tu apparais alors dans la liste des participants — visible par tout le club pour organiser covoiturage et logement.</p>
+      <p>Deux statuts possibles : <strong>« Je suis inscrit·e »</strong> si c'est ferme, ou <strong>« Je suis intéressé·e »</strong> si tu hésites encore. Les deux listes restent séparées pour que le club sache qui est sûr et qui réfléchit encore.</p>
     </div>
     <ol class="steps">
       <li><span class="n">1</span> Ouvre la fiche du triathlon qui t'intéresse</li>
       <li><span class="n">2</span> Saisis ton prénom et choisis ton format dans « Ajouter ma participation »</li>
-      <li><span class="n">3</span> Clique sur « Je participe ! »</li>
+      <li><span class="n">3</span> Choisis ton statut, puis valide</li>
     </ol>
     <div class="mock">
       <div class="mock-bar"><span></span><span></span><span></span></div>
       <div class="mock-body">
-        <div style="font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:600; margin-bottom:8px;">Participants (3)</div>
-        <div>
+        <div style="font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:600; margin-bottom:8px;">Inscrits (2)</div>
+        <div style="margin-bottom:12px;">
           <span class="m-pill">Julie <span class="chip xs" style="padding:1px 5px;">S</span></span>
           <span class="m-pill">Marc <span class="chip m" style="padding:1px 5px;">M</span></span>
-          <span class="m-pill">Sofia <span class="chip xl" style="padding:1px 5px;">XL</span></span>
+        </div>
+        <div style="font-size:12px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.06em; font-weight:600; margin-bottom:8px;">Intéressés (1)</div>
+        <div>
+          <span class="m-pill" style="border-style:dashed; opacity:0.75;">Sofia <span class="chip xl" style="padding:1px 5px;">XL</span></span>
         </div>
       </div>
     </div>
@@ -577,7 +583,7 @@
     </div>
     <div class="feature-body">
       <p>Une fois la date passée, un triathlon quitte automatiquement la carte et la liste principale pour ne pas encombrer l'affichage. Il reste consultable via le bouton <strong>« Anciens »</strong> dans la barre d'outils.</p>
-      <p>Sur un ancien triathlon, un bouton <strong>« Reprogrammer »</strong> permet de décaler sa date d'un an — pratique pour préparer l'édition suivante sans tout ressaisir.</p>
+      <p>Sur un ancien triathlon, un bouton <strong>« Reprogrammer »</strong> permet de décaler sa date d'un an — pratique pour préparer l'édition suivante sans tout ressaisir. Une suggestion <strong>« Prochaine édition probable »</strong> apparaît même directement sur la carte de l'événement, dans la vue Anciens.</p>
     </div>
     <div class="mock">
       <div class="mock-bar"><span></span><span></span><span></span></div>
@@ -634,6 +640,79 @@
             <div class="m-bib-name">L'Embrunman <span class="chip taken" style="margin-left:4px;">Pris</span></div>
             <div class="m-bib-meta">Cédé par Karim</div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="calendrier">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2zM16 3v4M8 3v4M3 11h18M12 15v4m-2-2h4"/></svg>
+      </div>
+      <div>
+        <h2>Export vers ton calendrier</h2>
+        <span class="feature-tag">Google Calendar, Apple Calendar…</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Chaque triathlon peut être ajouté à ton agenda personnel : ouvre sa fiche et clique sur l'icône <strong>calendrier</strong> en haut à droite pour télécharger l'événement au format .ics.</p>
+      <p>Pour tout récupérer d'un coup, le bouton <strong>de téléchargement</strong> dans l'en-tête du site (vues Carte et Liste) exporte tous les triathlons à venir en une seule fois.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body" style="display:flex; align-items:center; gap:10px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--red-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" style="width:18px;height:18px;"><path d="M19 21H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2zM16 3v4M8 3v4M3 11h18M12 15v4m-2-2h4"/></svg>
+        </div>
+        <div>
+          <div class="m-card-title">tri-club-psc-calendrier.ics</div>
+          <div class="m-card-sub">Téléchargé — prêt à importer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="stats">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M8 17V9m5 8V5m5 12v-6"/></svg>
+      </div>
+      <div>
+        <h2>Statistiques</h2>
+        <span class="feature-tag">Onglet dédié</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>L'onglet <strong>« Stats »</strong> résume l'activité du club sur toute la saison : nombre de triathlons au calendrier, inscriptions confirmées, membres intéressés, événements club, avec un histogramme des inscriptions par mois et une répartition par format.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px;">
+          <div style="text-align:center;">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; color:var(--ink);">12</div>
+            <div style="font-size:10px; color:var(--ink-faint);">Triathlons</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; color:var(--ink);">34</div>
+            <div style="font-size:10px; color:var(--ink-faint);">Inscrits</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; color:var(--ink);">9</div>
+            <div style="font-size:10px; color:var(--ink-faint);">Intéressés</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:20px; color:var(--red);">4</div>
+            <div style="font-size:10px; color:var(--ink-faint);">Club</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-end; gap:6px; height:56px;">
+          <div style="flex:1; background:var(--red); opacity:0.85; border-radius:3px 3px 0 0; height:40%;"></div>
+          <div style="flex:1; background:var(--red); opacity:0.85; border-radius:3px 3px 0 0; height:70%;"></div>
+          <div style="flex:1; background:var(--red); opacity:0.85; border-radius:3px 3px 0 0; height:55%;"></div>
+          <div style="flex:1; background:var(--red); opacity:0.85; border-radius:3px 3px 0 0; height:100%;"></div>
+          <div style="flex:1; background:var(--red); opacity:0.85; border-radius:3px 3px 0 0; height:30%;"></div>
         </div>
       </div>
     </div>
