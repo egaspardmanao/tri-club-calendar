@@ -12,7 +12,7 @@ import IdentityPicker from './components/IdentityPicker'
 import TrashView from './components/TrashView'
 import { useTriathlons } from './hooks/useTriathlons'
 import { useIdentity } from './hooks/useIdentity'
-import { FORMAT_ORDER } from './lib/formats'
+import { FORMAT_ORDER, TYPES_EPREUVE } from './lib/formats'
 import { downloadICS } from './lib/icalendar'
 import pscLogo from './assets/psc-logo.jpeg'
 
@@ -53,7 +53,7 @@ export default function App() {
   const { identity, setIdentity } = useIdentity()
   const [view, setView] = useState('map') // 'map' | 'list' | 'bibs' | 'stats' | 'trash'
   const [sort, setSort] = useState('date')
-  const [filterFormat, setFilterFormat] = useState(null)
+  const [filterType, setFilterType] = useState(null)
   const [selected, setSelected] = useState(null)
   const [addOpen, setAddOpen] = useState(false)
   const [showPast, setShowPast] = useState(false)
@@ -70,10 +70,10 @@ export default function App() {
 
   const filtered = useMemo(() => {
     let list = [...(showPast ? past : upcoming)]
-    if (filterFormat) list = list.filter(t => t.formats?.includes(filterFormat))
+    if (filterType) list = list.filter(t => t.type_epreuve === filterType)
     if (sort === 'format') list.sort((a, b) => FORMAT_ORDER.indexOf(a.formats?.[0]) - FORMAT_ORDER.indexOf(b.formats?.[0]))
     return list
-  }, [upcoming, past, showPast, filterFormat, sort])
+  }, [upcoming, past, showPast, filterType, sort])
 
   const grouped = useMemo(() => {
     if (sort === 'date') return groupByMonth(filtered)
@@ -170,16 +170,20 @@ export default function App() {
                 <Archive size={12} /> {showPast ? `Anciens (${past.length})` : `Anciens (${past.length})`}
               </button>
 
-              {/* Format filter */}
-              <div className="flex items-center gap-1 sm:ml-auto shrink-0">
-                <button onClick={() => setFilterFormat(null)}
-                  className={`px-2.5 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${!filterFormat ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
+              {/* Type filter */}
+              <div className="flex items-center gap-1 sm:ml-auto shrink-0 flex-wrap">
+                <button onClick={() => setFilterType(null)}
+                  className={`px-2.5 py-1 text-xs rounded-md transition-colors whitespace-nowrap ${!filterType ? 'bg-slate-700 text-white' : 'text-slate-500 hover:text-white'}`}>
                   Tous
                 </button>
-                {FORMAT_ORDER.map(f => (
-                  <button key={f} onClick={() => setFilterFormat(filterFormat === f ? null : f)}
-                    className={`format-badge cursor-pointer transition-opacity ${filterFormat && filterFormat !== f ? 'opacity-30' : 'opacity-100'}`}>
-                    {f}
+                {TYPES_EPREUVE.map(t => (
+                  <button key={t} onClick={() => setFilterType(filterType === t ? null : t)}
+                    className={`px-2.5 py-1 text-xs rounded-md whitespace-nowrap cursor-pointer transition-all border ${
+                      filterType === t
+                        ? 'bg-water-900/60 border-water-500 text-water-200'
+                        : 'border-transparent text-slate-500 hover:text-white'
+                    }`}>
+                    {t}
                   </button>
                 ))}
               </div>

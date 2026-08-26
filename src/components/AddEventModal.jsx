@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { X, MapPin } from 'lucide-react'
-import { TYPES_EPREUVE, FORMATS_BY_TYPE } from '../lib/formats'
+import { TYPES_EPREUVE, TYPES_SANS_FORMAT, FORMATS_BY_TYPE } from '../lib/formats'
 import { supabase } from '../lib/supabase'
 import FormatBadge from './FormatBadge'
 
@@ -24,6 +24,7 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
   const [error, setError] = useState('')
 
   const formatsDuType = FORMATS_BY_TYPE[form.type_epreuve] ?? {}
+  const sansFormat = TYPES_SANS_FORMAT.includes(form.type_epreuve)
 
   function changeType(type_epreuve) {
     // Les formats sélectionnés ne s'appliquent qu'à un seul type ; on repart à zéro au changement.
@@ -41,8 +42,10 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!form.name || !form.city || !form.date || form.formats.length === 0) {
-      setError('Remplis au moins le nom, la ville, la date et un format.')
+    if (!form.name || !form.city || !form.date || (!sansFormat && form.formats.length === 0)) {
+      setError(sansFormat
+        ? 'Remplis au moins le nom, la ville et la date.'
+        : 'Remplis au moins le nom, la ville, la date et un format.')
       return
     }
     setSaving(true)
@@ -131,28 +134,30 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
             </div>
           </div>
 
-          <div>
-            <label className="label">Formats proposés *</label>
-            <div className="flex flex-wrap gap-2">
-              {Object.keys(formatsDuType).map(f => (
-                <button key={f} type="button" title={formatsDuType[f].desc}
-                  onClick={() => toggle(f)}
-                  className={`format-badge text-sm px-3 py-1 cursor-pointer border transition-all ${
-                    form.formats.includes(f)
-                      ? 'border-water-500 ring-1 ring-water-500'
-                      : 'border-slate-700 opacity-50 hover:opacity-80'
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
+          {!sansFormat && (
+            <div>
+              <label className="label">Formats proposés *</label>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(formatsDuType).map(f => (
+                  <button key={f} type="button" title={formatsDuType[f].desc}
+                    onClick={() => toggle(f)}
+                    className={`format-badge text-sm px-3 py-1 cursor-pointer border transition-all ${
+                      form.formats.includes(f)
+                        ? 'border-water-500 ring-1 ring-water-500'
+                        : 'border-slate-700 opacity-50 hover:opacity-80'
+                    }`}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+              {form.formats.length > 0 && (
+                <p className="text-xs text-slate-500 mt-2">
+                  {form.formats.map(f => `${f} : ${formatsDuType[f]?.desc}`).join(' · ')}
+                </p>
+              )}
             </div>
-            {form.formats.length > 0 && (
-              <p className="text-xs text-slate-500 mt-2">
-                {form.formats.map(f => `${f} : ${formatsDuType[f]?.desc}`).join(' · ')}
-              </p>
-            )}
-          </div>
+          )}
 
           <div>
             <label className="label">Site officiel</label>

@@ -1,8 +1,12 @@
-// Types d'épreuves proposés par le club.
-export const TYPES_EPREUVE = ['Triathlon', 'Course à pied', 'Trail', 'Cyclo']
+// Types d'épreuves proposés par le club. "Autre" n'a pas de formats prédéfinis (voir plus bas).
+export const TYPES_EPREUVE = ['Triathlon', 'Duathlon', 'Aquathlon', 'Course à pied', 'Trail', 'Cyclo', 'Autre']
+
+// Types dont le format de course n'est pas imposé — l'étape "Formats" du formulaire est masquée.
+export const TYPES_SANS_FORMAT = ['Autre']
 
 // Formats par type d'épreuve — affichés comme boutons à cocher dans le formulaire d'ajout,
-// filtrés selon le type d'épreuve sélectionné.
+// filtrés selon le type d'épreuve sélectionné. Un type absent de cet objet (ex. "Autre")
+// n'a simplement aucun format à choisir.
 export const FORMATS_BY_TYPE = {
   'Triathlon': {
     XS:  { label: 'XS',  color: 'bg-emerald-900 text-emerald-300', desc: '200m / 5km / 20km' },
@@ -11,6 +15,22 @@ export const FORMATS_BY_TYPE = {
     L:   { label: 'L',   color: 'bg-blue-900 text-blue-300',       desc: '2km / 80km / 20km' },
     XL:  { label: 'XL',  color: 'bg-violet-900 text-violet-300',   desc: 'Half (1,9km / 90km / 21km)' },
     XXL: { label: 'XXL', color: 'bg-orange-900 text-orange-300',   desc: 'Full Ironman (3,8km / 180km / 42km)' },
+  },
+  'Duathlon': {
+    XS:  { label: 'XS',  color: 'bg-emerald-900 text-emerald-300', desc: '2,5km / 20km / 2,5km' },
+    S:   { label: 'S',   color: 'bg-teal-900 text-teal-300',       desc: '5km / 30km / 5km' },
+    M:   { label: 'M',   color: 'bg-water-900 text-water-300',     desc: '10km / 40km / 5km' },
+    L:   { label: 'L',   color: 'bg-blue-900 text-blue-300',       desc: '10km / 60km / 10km' },
+    XL:  { label: 'XL',  color: 'bg-violet-900 text-violet-300',   desc: '10km / 90km / 15km' },
+    XXL: { label: 'XXL', color: 'bg-orange-900 text-orange-300',   desc: 'Powerman (10km / 150km / 30km)' },
+  },
+  'Aquathlon': {
+    XS:  { label: 'XS',  color: 'bg-emerald-900 text-emerald-300', desc: '400m / 2,5km' },
+    S:   { label: 'S',   color: 'bg-teal-900 text-teal-300',       desc: '750m / 5km' },
+    M:   { label: 'M',   color: 'bg-water-900 text-water-300',     desc: '1km / 8km' },
+    L:   { label: 'L',   color: 'bg-blue-900 text-blue-300',       desc: '1,5km / 10km' },
+    XL:  { label: 'XL',  color: 'bg-violet-900 text-violet-300',   desc: '2km / 15km' },
+    XXL: { label: 'XXL', color: 'bg-orange-900 text-orange-300',   desc: '3km / 20km' },
   },
   'Course à pied': {
     '5K':      { label: '5K',      color: 'bg-emerald-900 text-emerald-300', desc: '5 km' },
@@ -35,9 +55,14 @@ export const FORMATS_BY_TYPE = {
   },
 }
 
-// Dictionnaire plat combinant tous les formats de tous les types (clés uniques globalement) :
-// utilisé partout où le type d'épreuve n'est pas connu au moment du lookup (tri, badges, filtres).
+// Dictionnaire plat combinant tous les formats de tous les types. Les clés XS-XXL sont
+// partagées par Triathlon/Duathlon/Aquathlon (même échelle, distances différentes) : ce
+// dictionnaire ne sert donc que de secours d'affichage (badge sans connaître le type précis),
+// pas de source de vérité sur la distance exacte — le formulaire, lui, utilise FORMATS_BY_TYPE.
 export const FORMATS = Object.values(FORMATS_BY_TYPE).reduce((acc, byType) => ({ ...acc, ...byType }), {})
 
-// Ordre d'affichage global (concatène l'ordre de chaque type, dans l'ordre de TYPES_EPREUVE).
-export const FORMAT_ORDER = TYPES_EPREUVE.flatMap(t => Object.keys(FORMATS_BY_TYPE[t]))
+// Ordre d'affichage global (concatène l'ordre de chaque type, dans l'ordre de TYPES_EPREUVE,
+// en dédupliquant les clés XS-XXL déjà vues pour ne pas les répéter 3 fois).
+export const FORMAT_ORDER = [...new Set(
+  TYPES_EPREUVE.flatMap(t => Object.keys(FORMATS_BY_TYPE[t] ?? {}))
+)]

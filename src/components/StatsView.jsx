@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { FORMAT_ORDER } from '../lib/formats'
+import { TYPES_EPREUVE } from '../lib/formats'
 
 function monthKey(date) {
   const d = new Date(date)
@@ -15,12 +15,12 @@ export default function StatsView({ triathlons }) {
     const totalInterested = withDate.reduce((sum, t) => sum + (t.participants?.filter(p => p.status === 'interested').length || 0), 0)
     const clubEvents = withDate.filter(t => t.is_club_event).length
 
-    const byFormat = {}
-    FORMAT_ORDER.forEach(f => { byFormat[f] = 0 })
+    const byType = {}
+    TYPES_EPREUVE.forEach(t => { byType[t] = 0 })
     withDate.forEach(t => {
-      t.participants?.filter(p => p.status !== 'interested').forEach(p => {
-        if (byFormat[p.format] !== undefined) byFormat[p.format]++
-      })
+      const type = t.type_epreuve || 'Triathlon'
+      const confirmedCount = t.participants?.filter(p => p.status !== 'interested').length || 0
+      if (byType[type] !== undefined) byType[type] += confirmedCount
     })
 
     const monthMap = {}
@@ -32,9 +32,9 @@ export default function StatsView({ triathlons }) {
     })
     const byMonth = Object.values(monthMap).sort((a, b) => a.date - b.date)
     const maxMonthValue = Math.max(1, ...byMonth.map(m => Math.max(m.events, m.participations)))
-    const maxFormatValue = Math.max(1, ...Object.values(byFormat))
+    const maxTypeValue = Math.max(1, ...Object.values(byType))
 
-    return { total: withDate.length, totalParticipations, totalInterested, clubEvents, byFormat, byMonth, maxMonthValue, maxFormatValue }
+    return { total: withDate.length, totalParticipations, totalInterested, clubEvents, byType, byMonth, maxMonthValue, maxTypeValue }
   }, [triathlons])
 
   return (
@@ -89,20 +89,20 @@ export default function StatsView({ triathlons }) {
         )}
       </div>
 
-      {/* By format */}
+      {/* By type */}
       <div className="card p-5">
-        <div className="label mb-4">Inscriptions par format</div>
+        <div className="label mb-4">Inscriptions par type d'épreuve</div>
         <div className="space-y-2.5">
-          {FORMAT_ORDER.map(f => (
-            <div key={f} className="flex items-center gap-3">
-              <div className="w-8 text-xs font-display font-bold text-slate-400">{f}</div>
+          {TYPES_EPREUVE.map(t => (
+            <div key={t} className="flex items-center gap-3">
+              <div className="w-24 shrink-0 text-xs font-display font-bold text-slate-400 truncate">{t}</div>
               <div className="flex-1 bg-slate-800 rounded-full h-2 overflow-hidden">
                 <div
                   className="h-full bg-water-500 rounded-full transition-all"
-                  style={{ width: `${(stats.byFormat[f] / stats.maxFormatValue) * 100}%` }}
+                  style={{ width: `${(stats.byType[t] / stats.maxTypeValue) * 100}%` }}
                 />
               </div>
-              <div className="w-6 text-xs text-slate-500 text-right tabular-nums">{stats.byFormat[f]}</div>
+              <div className="w-6 text-xs text-slate-500 text-right tabular-nums">{stats.byType[t]}</div>
             </div>
           ))}
         </div>
