@@ -115,7 +115,7 @@ export default function App() {
             )}
             {view !== 'bibs' && view !== 'stats' && view !== 'trash' && (
               <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2">
-                <Plus size={16} /> <span className="hidden sm:inline">Ajouter un triathlon</span><span className="sm:hidden">Ajouter</span>
+                <Plus size={16} /> <span className="hidden sm:inline">Ajouter une épreuve</span><span className="sm:hidden">Ajouter</span>
               </button>
             )}
           </div>
@@ -215,7 +215,7 @@ export default function App() {
                 )
               ))}
               {filtered.length === 0 && (
-                <div className="text-center text-slate-500 py-12 text-sm">Aucun triathlon pour ces filtres.<br />Commence par en ajouter un !</div>
+                <div className="text-center text-slate-500 py-12 text-sm">Aucune épreuve pour ces filtres.<br />Commence par en ajouter une !</div>
               )}
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function App() {
               )
             ))}
             {filtered.length === 0 && (
-              <div className="text-center text-slate-500 py-20 text-sm">Aucun triathlon pour ces filtres.<br />Commence par en ajouter un !</div>
+              <div className="text-center text-slate-500 py-20 text-sm">Aucune épreuve pour ces filtres.<br />Commence par en ajouter une !</div>
             )}
           </div>
         )}

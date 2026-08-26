@@ -8,7 +8,7 @@ import { FORMAT_ORDER } from '../lib/formats'
 const SORT_OPTIONS = [
   { value: 'date', label: 'Par date' },
   { value: 'format', label: 'Par format' },
-  { value: 'triathlon', label: 'Par triathlon' },
+  { value: 'triathlon', label: 'Par épreuve' },
 ]
 
 export default function BibExchange({ triathlons }) {
@@ -42,7 +42,7 @@ export default function BibExchange({ triathlons }) {
       <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
         <div>
           <h2 className="font-display font-bold text-xl text-white">Bourse aux dossards</h2>
-          <p className="text-slate-500 text-xs">Cède ou récupère un dossard pour un triathlon</p>
+          <p className="text-slate-500 text-xs">Cède ou récupère un dossard pour une épreuve</p>
         </div>
         <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-1.5 text-sm shrink-0">
           <Plus size={16} /> Céder un dossard
@@ -54,7 +54,7 @@ export default function BibExchange({ triathlons }) {
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
           <input
             className="input pl-9"
-            placeholder="Chercher un triathlon ou un format…"
+            placeholder="Chercher une épreuve ou un format…"
             value={query}
             onChange={e => setQuery(e.target.value)}
           />

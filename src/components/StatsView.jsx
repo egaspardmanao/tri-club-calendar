@@ -48,7 +48,7 @@ export default function StatsView({ triathlons }) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="card p-4">
           <div className="text-2xl font-display font-bold text-white">{stats.total}</div>
-          <div className="text-slate-500 text-xs mt-0.5">Triathlons au calendrier</div>
+          <div className="text-slate-500 text-xs mt-0.5">Épreuves au calendrier</div>
         </div>
         <div className="card p-4">
           <div className="text-2xl font-display font-bold text-white">{stats.totalParticipations}</div>

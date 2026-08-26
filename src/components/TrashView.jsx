@@ -22,7 +22,7 @@ export default function TrashView({ onRestored }) {
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
         <h2 className="font-display font-bold text-xl text-white flex items-center gap-2"><Trash size={18} /> Corbeille</h2>
-        <p className="text-slate-500 text-xs">Les triathlons supprimés restent ici, restaurables à tout moment</p>
+        <p className="text-slate-500 text-xs">Les épreuves supprimées restent ici, restaurables à tout moment</p>
       </div>
 
       {loading ? (

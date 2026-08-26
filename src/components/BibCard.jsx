@@ -25,7 +25,7 @@ export default function BibCard({ bib, onUpdated }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <div className="font-display font-bold text-lg text-white leading-tight truncate">
-              {t?.name || 'Triathlon supprimé'}
+              {t?.name || 'Épreuve supprimée'}
             </div>
             {bib.format && <FormatBadge format={bib.format} />}
             {taken && (

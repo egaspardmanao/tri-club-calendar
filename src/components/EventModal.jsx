@@ -97,7 +97,7 @@ export default function EventModal({ triathlon, onClose, onUpdated, identity }) 
             <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
               {isPast && (
                 <span className="inline-block text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-800 rounded px-1.5 py-0.5">
-                  Ancien triathlon
+                  Ancienne épreuve
                 </span>
               )}
               {triathlon.is_club_event && (
@@ -123,7 +123,7 @@ export default function EventModal({ triathlon, onClose, onUpdated, identity }) 
 
         {confirmDelete && (
           <div className="mx-4 sm:mx-5 mt-4 bg-red-950/40 border border-red-900 rounded-lg p-3 flex items-center justify-between gap-3">
-            <p className="text-sm text-red-300">Supprimer définitivement ce triathlon ?</p>
+            <p className="text-sm text-red-300">Supprimer définitivement cette épreuve ?</p>
             <div className="flex gap-2 shrink-0">
               <button onClick={() => setConfirmDelete(false)} className="btn-ghost text-xs px-2 py-1">Annuler</button>
               <button onClick={handleDelete} className="bg-red-600 hover:bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-lg transition-colors">Supprimer</button>

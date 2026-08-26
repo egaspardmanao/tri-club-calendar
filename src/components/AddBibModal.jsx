@@ -46,10 +46,10 @@ export default function AddBibModal({ triathlons, onClose, onAdded }) {
         </div>
         <form onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-4">
           <div>
-            <label className="label">Triathlon *</label>
+            <label className="label">Épreuve *</label>
             <select className="input" value={form.triathlon_id}
               onChange={e => handleTriathlonChange(e.target.value)} required>
-              <option value="">Sélectionner un triathlon…</option>
+              <option value="">Sélectionner une épreuve…</option>
               {triathlons.map(t => (
                 <option key={t.id} value={t.id}>{t.name} — {t.city}</option>
               ))}

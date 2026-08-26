@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { X, MapPin } from 'lucide-react'
-import { FORMAT_ORDER } from '../lib/formats'
+import { TYPES_EPREUVE, FORMATS_BY_TYPE } from '../lib/formats'
 import { supabase } from '../lib/supabase'
 import FormatBadge from './FormatBadge'
 
@@ -9,17 +9,26 @@ const GEOCODE_URL = (q) =>
 
 export default function AddEventModal({ onClose, onAdded, editing = null }) {
   const [form, setForm] = useState(editing ? {
+    type_epreuve: editing.type_epreuve || 'Triathlon',
     name: editing.name || '', city: editing.city || '', date: editing.date || '',
     end_date: editing.end_date || '',
     website: editing.website || '', register_url: editing.register_url || '',
     whatsapp_url: editing.whatsapp_url || '', comment: editing.comment || '',
     formats: editing.formats || [], is_club_event: editing.is_club_event || false,
   } : {
+    type_epreuve: 'Triathlon',
     name: '', city: '', date: '', end_date: '', website: '', register_url: '',
     whatsapp_url: '', comment: '', formats: [], is_club_event: false,
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  const formatsDuType = FORMATS_BY_TYPE[form.type_epreuve] ?? {}
+
+  function changeType(type_epreuve) {
+    // Les formats sélectionnés ne s'appliquent qu'à un seul type ; on repart à zéro au changement.
+    setForm(f => ({ ...f, type_epreuve, formats: [] }))
+  }
 
   function toggle(format) {
     setForm(f => ({
@@ -50,6 +59,7 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
     }
 
     const payload = {
+      type_epreuve: form.type_epreuve,
       name: form.name.trim(),
       city: form.city.trim(),
       date: form.date,
@@ -76,14 +86,32 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <div className="card w-full h-full sm:h-auto max-w-lg sm:max-h-[90vh] overflow-y-auto sm:rounded-xl rounded-none" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-800 sticky top-0 bg-slate-900 z-10">
-          <h2 className="font-display font-bold text-xl text-white">{editing ? 'Modifier le triathlon' : 'Ajouter un triathlon'}</h2>
+          <h2 className="font-display font-bold text-xl text-white">{editing ? "Modifier l'épreuve" : 'Ajouter une épreuve'}</h2>
           <button onClick={onClose} className="text-slate-500 hover:text-white p-1 transition-colors"><X size={20} /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-4">
+          <div>
+            <label className="label">Type d'épreuve *</label>
+            <div className="flex flex-wrap gap-2">
+              {TYPES_EPREUVE.map(t => (
+                <button key={t} type="button"
+                  onClick={() => changeType(t)}
+                  className={`text-sm px-3 py-1.5 rounded-lg cursor-pointer border transition-all ${
+                    form.type_epreuve === t
+                      ? 'border-water-500 ring-1 ring-water-500 text-white'
+                      : 'border-slate-700 text-slate-400 hover:text-white hover:border-slate-500'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
               <label className="label">Nom de l'événement *</label>
-              <input className="input" placeholder="ex: Triathlon de Nice" value={form.name}
+              <input className="input" placeholder="ex: Marathon de Paris" value={form.name}
                 onChange={e => setForm(f => ({...f, name: e.target.value}))} required />
             </div>
             <div>
@@ -106,8 +134,8 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
           <div>
             <label className="label">Formats proposés *</label>
             <div className="flex flex-wrap gap-2">
-              {FORMAT_ORDER.map(f => (
-                <button key={f} type="button"
+              {Object.keys(formatsDuType).map(f => (
+                <button key={f} type="button" title={formatsDuType[f].desc}
                   onClick={() => toggle(f)}
                   className={`format-badge text-sm px-3 py-1 cursor-pointer border transition-all ${
                     form.formats.includes(f)
@@ -119,6 +147,11 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
                 </button>
               ))}
             </div>
+            {form.formats.length > 0 && (
+              <p className="text-xs text-slate-500 mt-2">
+                {form.formats.map(f => `${f} : ${formatsDuType[f]?.desc}`).join(' · ')}
+              </p>
+            )}
           </div>
 
           <div>
@@ -155,7 +188,7 @@ export default function AddEventModal({ onClose, onAdded, editing = null }) {
           <div className="flex gap-2 pt-1">
             <button type="button" onClick={onClose} className="btn-ghost flex-1">Annuler</button>
             <button type="submit" className="btn-primary flex-1" disabled={saving}>
-              {saving ? 'Enregistrement…' : editing ? 'Enregistrer' : 'Ajouter le triathlon'}
+              {saving ? 'Enregistrement…' : editing ? 'Enregistrer' : "Ajouter l'épreuve"}
             </button>
           </div>
         </form>

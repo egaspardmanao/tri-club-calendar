@@ -4,6 +4,7 @@
 -- Table principale : événements triathlon
 create table if not exists triathlons (
   id          uuid primary key default gen_random_uuid(),
+  type_epreuve text not null default 'Triathlon' check (type_epreuve in ('Triathlon', 'Course à pied', 'Trail', 'Cyclo')),
   name        text not null,
   city        text not null,
   date        date,
