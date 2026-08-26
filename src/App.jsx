@@ -1,14 +1,16 @@
 import { useState, useMemo } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { Map, List, SlidersHorizontal, Plus, Archive, Ticket } from 'lucide-react'
+import { Map, List, SlidersHorizontal, Plus, Archive, Ticket, BarChart3, Download } from 'lucide-react'
 import TriathlonMap from './components/TriathlonMap'
 import EventCard from './components/EventCard'
 import EventModal from './components/EventModal'
 import AddEventModal from './components/AddEventModal'
 import BibExchange from './components/BibExchange'
+import StatsView from './components/StatsView'
 import { useTriathlons } from './hooks/useTriathlons'
 import { FORMAT_ORDER } from './lib/formats'
+import { downloadICS } from './lib/icalendar'
 import pscLogo from './assets/psc-logo.jpeg'
 
 function isPastDate(triathlon) {
@@ -89,11 +91,19 @@ export default function App() {
               <p className="text-slate-500 text-xs hidden sm:block">Calendrier de saison</p>
             </div>
           </div>
-          {view !== 'bibs' && (
-            <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 shrink-0">
-              <Plus size={16} /> <span className="hidden sm:inline">Ajouter un triathlon</span><span className="sm:hidden">Ajouter</span>
-            </button>
-          )}
+          <div className="flex items-center gap-2 shrink-0">
+            {(view === 'map' || view === 'list') && (
+              <button onClick={() => downloadICS('tri-club-psc-calendrier.ics', upcoming)} title="Exporter le calendrier (.ics)"
+                className="btn-ghost p-2 sm:px-3 sm:py-2">
+                <Download size={16} />
+              </button>
+            )}
+            {view !== 'bibs' && view !== 'stats' && (
+              <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2">
+                <Plus size={16} /> <span className="hidden sm:inline">Ajouter un triathlon</span><span className="sm:hidden">Ajouter</span>
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -114,9 +124,13 @@ export default function App() {
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === 'bibs' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
               <Ticket size={12} /> Bourse
             </button>
+            <button onClick={() => setView('stats')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === 'stats' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
+              <BarChart3 size={12} /> Stats
+            </button>
           </div>
 
-          {view !== 'bibs' && (
+          {view !== 'bibs' && view !== 'stats' && (
             <>
               {/* Sort */}
               <div className="flex items-center gap-1.5 shrink-0">
@@ -159,6 +173,8 @@ export default function App() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-4 py-4">
         {view === 'bibs' ? (
           <BibExchange triathlons={triathlons} />
+        ) : view === 'stats' ? (
+          <StatsView triathlons={triathlons} />
         ) : loading ? (
           <div className="flex items-center justify-center h-64 text-slate-500">Chargement…</div>
         ) : view === 'map' ? (

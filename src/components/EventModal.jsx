@@ -1,19 +1,24 @@
 import { format, addYears } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { X, Globe, ClipboardList, MessageCircle, Users, Plus, Pencil, Trash2, CalendarClock, ShieldCheck } from 'lucide-react'
+import { X, Globe, ClipboardList, MessageCircle, Users, Plus, Pencil, Trash2, CalendarClock, ShieldCheck, HelpCircle, CalendarPlus } from 'lucide-react'
 import { useState } from 'react'
 import FormatBadge from './FormatBadge'
 import AddEventModal from './AddEventModal'
 import { FORMAT_ORDER } from '../lib/formats'
 import { supabase } from '../lib/supabase'
+import { downloadICS } from '../lib/icalendar'
 
 export default function EventModal({ triathlon, onClose, onUpdated }) {
   const [name, setName] = useState('')
   const [participantFormat, setParticipantFormat] = useState(triathlon.formats?.[0] || 'M')
+  const [participantStatus, setParticipantStatus] = useState('confirmed')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [editing, setEditing] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+
+  const confirmed = triathlon.participants?.filter(p => p.status !== 'interested') || []
+  const interested = triathlon.participants?.filter(p => p.status === 'interested') || []
 
   const referenceDate = triathlon.end_date || triathlon.date
   const isPast = referenceDate ? new Date(referenceDate) < new Date().setHours(0, 0, 0, 0) : false
@@ -38,6 +43,7 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
       triathlon_id: triathlon.id,
       name: name.trim(),
       format: participantFormat,
+      status: participantStatus,
     })
     if (error) { setError('Erreur lors de l\'inscription.'); setSaving(false); return }
     setSaving(false)
@@ -101,6 +107,8 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
             <p className="text-slate-500 text-sm">{triathlon.city}</p>
           </div>
           <div className="flex items-center gap-1">
+            <button onClick={() => downloadICS(`${triathlon.name}.ics`, [triathlon])} title="Ajouter à mon calendrier"
+              className="text-slate-500 hover:text-white p-1.5 transition-colors"><CalendarPlus size={16} /></button>
             <button onClick={() => setEditing(true)} title="Modifier"
               className="text-slate-500 hover:text-white p-1.5 transition-colors"><Pencil size={16} /></button>
             <button onClick={() => setConfirmDelete(true)} title="Supprimer"
@@ -168,10 +176,10 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
 
           {/* Participants */}
           <div>
-            <div className="label flex items-center gap-1.5"><Users size={12} /> Participants ({triathlon.participants?.length || 0})</div>
-            {triathlon.participants?.length > 0 ? (
+            <div className="label flex items-center gap-1.5"><Users size={12} /> Inscrits ({confirmed.length})</div>
+            {confirmed.length > 0 ? (
               <div className="flex flex-wrap gap-2 mb-3">
-                {triathlon.participants.map((p) => (
+                {confirmed.map((p) => (
                   <div key={p.id} className="flex items-center gap-1.5 bg-slate-800 rounded-full pl-3 pr-1.5 py-1 text-sm">
                     <span className="text-white">{p.name}</span>
                     <FormatBadge format={p.format} />
@@ -184,6 +192,24 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
               </div>
             ) : (
               <p className="text-slate-500 text-sm mb-3">Personne encore inscrit. Soyez le premier !</p>
+            )}
+
+            {interested.length > 0 && (
+              <>
+                <div className="label flex items-center gap-1.5"><HelpCircle size={12} /> Intéressés ({interested.length})</div>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {interested.map((p) => (
+                    <div key={p.id} className="flex items-center gap-1.5 bg-slate-800/50 border border-dashed border-slate-700 rounded-full pl-3 pr-1.5 py-1 text-sm">
+                      <span className="text-slate-300">{p.name}</span>
+                      <FormatBadge format={p.format} />
+                      <button onClick={() => handleRemoveParticipant(p.id)} title="Retirer"
+                        className="text-slate-500 hover:text-red-400 transition-colors p-0.5">
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
 
             {/* Join form */}
@@ -211,9 +237,19 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
                   </select>
                 </div>
               </div>
+              <div className="flex rounded-lg overflow-hidden border border-slate-700">
+                <button type="button" onClick={() => setParticipantStatus('confirmed')}
+                  className={`flex-1 py-1.5 text-xs font-semibold transition-colors ${participantStatus === 'confirmed' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
+                  Je suis inscrit·e
+                </button>
+                <button type="button" onClick={() => setParticipantStatus('interested')}
+                  className={`flex-1 py-1.5 text-xs font-semibold transition-colors ${participantStatus === 'interested' ? 'bg-slate-600 text-white' : 'text-slate-400 hover:text-white'}`}>
+                  Je suis intéressé·e
+                </button>
+              </div>
               {error && <p className="text-red-400 text-xs">{error}</p>}
               <button type="submit" className="btn-primary w-full text-sm" disabled={saving}>
-                {saving ? 'Enregistrement…' : 'Je participe !'}
+                {saving ? 'Enregistrement…' : participantStatus === 'interested' ? 'Signaler mon intérêt' : 'Je participe !'}
               </button>
             </form>
           </div>

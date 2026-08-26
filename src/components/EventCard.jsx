@@ -1,7 +1,12 @@
-import { format } from 'date-fns'
+import { format, addYears } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { Globe, ClipboardList, MessageCircle, Users, ChevronRight, ShieldCheck } from 'lucide-react'
+import { Globe, ClipboardList, MessageCircle, Users, ChevronRight, ShieldCheck, Sparkles } from 'lucide-react'
 import FormatBadge from './FormatBadge'
+
+function isPast(triathlon) {
+  const ref = triathlon.end_date || triathlon.date
+  return ref ? new Date(ref) < new Date().setHours(0, 0, 0, 0) : false
+}
 
 export default function EventCard({ triathlon, onClick }) {
   const dateLabel = triathlon.date
@@ -9,6 +14,11 @@ export default function EventCard({ triathlon, onClick }) {
       ? `${format(new Date(triathlon.date), 'd', { locale: fr })}-${format(new Date(triathlon.end_date), 'd MMM yyyy', { locale: fr })}`
       : format(new Date(triathlon.date), 'd MMM yyyy', { locale: fr })
     : 'Date inconnue'
+
+  const showPrediction = isPast(triathlon) && triathlon.date
+  const predictedDate = showPrediction
+    ? format(addYears(new Date(triathlon.date), 1), 'd MMM yyyy', { locale: fr })
+    : null
 
   return (
     <button
@@ -36,6 +46,12 @@ export default function EventCard({ triathlon, onClick }) {
         <div className="flex items-center gap-1.5 mt-3 text-xs text-slate-400">
           <Users size={12} />
           <span>{triathlon.participants.map(p => p.name).join(', ')}</span>
+        </div>
+      )}
+      {showPrediction && (
+        <div className="flex items-center gap-1.5 mt-3 text-xs text-water-400">
+          <Sparkles size={12} />
+          <span>Prochaine édition probable : {predictedDate}</span>
         </div>
       )}
     </button>

@@ -25,6 +25,7 @@ create table if not exists participants (
   triathlon_id   uuid not null references triathlons(id) on delete cascade,
   name           text not null,
   format         text not null,    -- le format choisi par ce participant
+  status         text not null default 'confirmed' check (status in ('confirmed', 'interested')),
   created_at     timestamptz default now()
 );
 
@@ -84,6 +85,7 @@ create policy "Suppression publique participants"
 
 alter table triathlons add column if not exists end_date date;
 alter table triathlons add column if not exists is_club_event boolean not null default false;
+alter table participants add column if not exists status text not null default 'confirmed' check (status in ('confirmed', 'interested'));
 
 -- Migration bourse aux dossards (si triathlons/participants existent déjà) :
 -- exécuter uniquement le bloc "Table bourse aux dossards" et les 4 policies bib_transfers
