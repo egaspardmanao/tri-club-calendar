@@ -242,19 +242,22 @@ export default function EventModal({ triathlon, onClose, onUpdated, identity }) 
                   </select>
                 </div>
               </div>
-              <div className="flex rounded-lg overflow-hidden border border-slate-700">
-                <button type="button" onClick={() => setParticipantStatus('confirmed')}
-                  className={`flex-1 py-1.5 text-xs font-semibold transition-colors ${participantStatus === 'confirmed' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
-                  Je suis inscrit·e
-                </button>
-                <button type="button" onClick={() => setParticipantStatus('interested')}
-                  className={`flex-1 py-1.5 text-xs font-semibold transition-colors ${participantStatus === 'interested' ? 'bg-slate-600 text-white' : 'text-slate-400 hover:text-white'}`}>
-                  Je suis intéressé·e
-                </button>
+              <div>
+                <div className="label mb-1.5">Ton statut</div>
+                <div className="flex rounded-lg overflow-hidden border border-slate-700">
+                  <button type="button" onClick={() => setParticipantStatus('confirmed')}
+                    className={`flex-1 py-2 text-xs font-semibold transition-colors ${participantStatus === 'confirmed' ? 'bg-water-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'}`}>
+                    ✓ Je suis inscrit·e
+                  </button>
+                  <button type="button" onClick={() => setParticipantStatus('interested')}
+                    className={`flex-1 py-2 text-xs font-semibold transition-colors border-l border-slate-700 ${participantStatus === 'interested' ? 'bg-amber-600 text-white' : 'bg-slate-900 text-slate-400 hover:text-white'}`}>
+                    ? Je suis intéressé·e
+                  </button>
+                </div>
               </div>
               {error && <p className="text-red-400 text-xs">{error}</p>}
               <button type="submit" className="btn-primary w-full text-sm" disabled={saving}>
-                {saving ? 'Enregistrement…' : participantStatus === 'interested' ? 'Signaler mon intérêt' : 'Je participe !'}
+                {saving ? 'Enregistrement…' : 'Valider'}
               </button>
             </form>
           </div>
