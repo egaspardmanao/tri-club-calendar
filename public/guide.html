@@ -393,6 +393,9 @@
       <a href="#dossards"><span class="num">08</span> Bourse aux dossards</a>
       <a href="#calendrier"><span class="num">09</span> Export calendrier</a>
       <a href="#stats"><span class="num">10</span> Statistiques</a>
+      <a href="#identite"><span class="num">11</span> Ton identité</a>
+      <a href="#corbeille"><span class="num">12</span> Corbeille</a>
+      <a href="#avis"><span class="num">13</span> Avis post-course</a>
     </nav>
   </header>
 
@@ -713,6 +716,87 @@
           <div style="flex:1; background:var(--red); opacity:0.85; border-radius:3px 3px 0 0; height:55%;"></div>
           <div style="flex:1; background:var(--red); opacity:0.85; border-radius:3px 3px 0 0; height:100%;"></div>
           <div style="flex:1; background:var(--red); opacity:0.85; border-radius:3px 3px 0 0; height:30%;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="identite">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+      </div>
+      <div>
+        <h2>Ton identité</h2>
+        <span class="feature-tag">Bouton en haut à droite</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Clique sur <strong>« Qui es-tu ? »</strong> dans l'en-tête pour choisir ton prénom une bonne fois pour toutes. Il est ensuite pré-rempli automatiquement à chaque inscription, avis ou suppression — plus besoin de le retaper.</p>
+      <p>C'est mémorisé uniquement sur ton appareil, tu peux changer de profil à tout moment en recliquant sur le bouton.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div style="display:flex; justify-content:flex-end;">
+          <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius:8px; padding:6px 12px; font-size:13px; color:var(--ink);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--ink-faint)" stroke-width="2" style="width:14px;height:14px;"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+            Julie
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="corbeille">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
+      </div>
+      <div>
+        <h2>Corbeille</h2>
+        <span class="feature-tag">Onglet dédié</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Un triathlon supprimé par erreur n'est jamais perdu : il atterrit dans la <strong>Corbeille</strong>, avec la date et le prénom de qui l'a supprimé. Restaure-le en un clic, ou supprime-le définitivement si c'était voulu.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div class="m-card" style="margin-bottom:0; opacity:0.75;">
+          <div>
+            <div class="m-card-title">Triathlon de Nice</div>
+            <div class="m-card-sub">Nice · 18 avril 2027</div>
+            <div style="font-size:11px; color:var(--ink-faint); margin-top:4px;">Supprimé par Marc le 12 mai à 18:42</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="avis">
+    <div class="feature-head">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.6 1.6 7-6.2-3.8L6 21l1.6-7-5.4-4.6 7.1-.6z"/></svg>
+      </div>
+      <div>
+        <h2>Avis post-course</h2>
+        <span class="feature-tag">Sur les anciens triathlons</span>
+      </div>
+    </div>
+    <div class="feature-body">
+      <p>Une fois un triathlon passé, sa fiche affiche une section <strong>« Avis des participants »</strong> : note sur 5 et commentaire libre (organisation, parcours, ambiance…). La moyenne du club aide à choisir les prochaines éditions à privilégier.</p>
+    </div>
+    <div class="mock">
+      <div class="mock-bar"><span></span><span></span><span></span></div>
+      <div class="mock-body">
+        <div style="background:var(--surface-2); border-radius:8px; padding:10px 12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <span style="font-weight:600; font-size:13px; color:var(--ink);">Théo</span>
+            <span style="color:var(--amber); font-size:12px;">★★★★☆</span>
+          </div>
+          <p style="font-size:13px; color:var(--ink-soft); margin:0;">Super organisation, parcours vallonné mais magnifique. À refaire !</p>
         </div>
       </div>
     </div>
