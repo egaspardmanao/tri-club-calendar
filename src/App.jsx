@@ -1,14 +1,17 @@
 import { useState, useMemo } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { Map, List, SlidersHorizontal, Plus, Archive, Ticket, BarChart3, Download } from 'lucide-react'
+import { Map, List, SlidersHorizontal, Plus, Archive, Ticket, BarChart3, Download, User, Trash2 } from 'lucide-react'
 import TriathlonMap from './components/TriathlonMap'
 import EventCard from './components/EventCard'
 import EventModal from './components/EventModal'
 import AddEventModal from './components/AddEventModal'
 import BibExchange from './components/BibExchange'
 import StatsView from './components/StatsView'
+import IdentityPicker from './components/IdentityPicker'
+import TrashView from './components/TrashView'
 import { useTriathlons } from './hooks/useTriathlons'
+import { useIdentity } from './hooks/useIdentity'
 import { FORMAT_ORDER } from './lib/formats'
 import { downloadICS } from './lib/icalendar'
 import pscLogo from './assets/psc-logo.jpeg'
@@ -47,12 +50,20 @@ function groupByFormat(triathlons) {
 
 export default function App() {
   const { triathlons, loading, refetch } = useTriathlons()
-  const [view, setView] = useState('map') // 'map' | 'list' | 'bibs'
+  const { identity, setIdentity } = useIdentity()
+  const [view, setView] = useState('map') // 'map' | 'list' | 'bibs' | 'stats' | 'trash'
   const [sort, setSort] = useState('date')
   const [filterFormat, setFilterFormat] = useState(null)
   const [selected, setSelected] = useState(null)
   const [addOpen, setAddOpen] = useState(false)
   const [showPast, setShowPast] = useState(false)
+  const [identityPickerOpen, setIdentityPickerOpen] = useState(false)
+
+  const knownNames = useMemo(() => {
+    const names = new Set()
+    triathlons.forEach(t => t.participants?.forEach(p => names.add(p.name)))
+    return [...names]
+  }, [triathlons])
 
   const upcoming = useMemo(() => triathlons.filter(t => !isPastDate(t)), [triathlons])
   const past = useMemo(() => triathlons.filter(t => isPastDate(t)), [triathlons])
@@ -92,13 +103,17 @@ export default function App() {
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            <button onClick={() => setIdentityPickerOpen(true)} title={identity ? 'Changer de profil' : 'Qui es-tu ?'}
+              className="btn-ghost p-2 sm:px-3 sm:py-2 flex items-center gap-1.5 text-xs sm:text-sm">
+              <User size={16} /> <span className="hidden sm:inline">{identity || 'Qui es-tu ?'}</span>
+            </button>
             {(view === 'map' || view === 'list') && (
               <button onClick={() => downloadICS('tri-club-psc-calendrier.ics', upcoming)} title="Exporter le calendrier (.ics)"
                 className="btn-ghost p-2 sm:px-3 sm:py-2">
                 <Download size={16} />
               </button>
             )}
-            {view !== 'bibs' && view !== 'stats' && (
+            {view !== 'bibs' && view !== 'stats' && view !== 'trash' && (
               <button onClick={() => setAddOpen(true)} className="btn-primary flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2">
                 <Plus size={16} /> <span className="hidden sm:inline">Ajouter un triathlon</span><span className="sm:hidden">Ajouter</span>
               </button>
@@ -128,9 +143,13 @@ export default function App() {
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === 'stats' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
               <BarChart3 size={12} /> Stats
             </button>
+            <button onClick={() => setView('trash')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors ${view === 'trash' ? 'bg-water-600 text-white' : 'text-slate-400 hover:text-white'}`}>
+              <Trash2 size={12} /> Corbeille
+            </button>
           </div>
 
-          {view !== 'bibs' && view !== 'stats' && (
+          {view !== 'bibs' && view !== 'stats' && view !== 'trash' && (
             <>
               {/* Sort */}
               <div className="flex items-center gap-1.5 shrink-0">
@@ -175,6 +194,8 @@ export default function App() {
           <BibExchange triathlons={triathlons} />
         ) : view === 'stats' ? (
           <StatsView triathlons={triathlons} />
+        ) : view === 'trash' ? (
+          <TrashView onRestored={refetch} />
         ) : loading ? (
           <div className="flex items-center justify-center h-64 text-slate-500">Chargement…</div>
         ) : view === 'map' ? (
@@ -224,12 +245,20 @@ export default function App() {
           triathlon={selected}
           onClose={() => setSelected(null)}
           onUpdated={handleUpdated}
+          identity={identity}
         />
       )}
       {addOpen && (
         <AddEventModal
           onClose={() => setAddOpen(false)}
           onAdded={() => { setAddOpen(false); refetch() }}
+        />
+      )}
+      {identityPickerOpen && (
+        <IdentityPicker
+          knownNames={knownNames}
+          onPick={(n) => { setIdentity(n); setIdentityPickerOpen(false) }}
+          onClose={() => setIdentityPickerOpen(false)}
         />
       )}
     </div>

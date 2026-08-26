@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 
-export function useTriathlons() {
-  const [triathlons, setTriathlons] = useState([])
+export function useTrash() {
+  const [trashed, setTrashed] = useState([])
   const [loading, setLoading] = useState(true)
 
   const fetch = useCallback(async () => {
@@ -10,14 +10,14 @@ export function useTriathlons() {
     const { data, error } = await supabase
       .from('triathlons')
       .select('*, participants(*)')
-      .is('deleted_at', null)
-      .order('date', { ascending: true })
-    if (!error) setTriathlons(data || [])
+      .not('deleted_at', 'is', null)
+      .order('deleted_at', { ascending: false })
+    if (!error) setTrashed(data || [])
     setLoading(false)
     return data || []
   }, [])
 
   useEffect(() => { fetch() }, [fetch])
 
-  return { triathlons, loading, refetch: fetch }
+  return { trashed, loading, refetch: fetch }
 }

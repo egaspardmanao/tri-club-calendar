@@ -4,12 +4,13 @@ import { X, Globe, ClipboardList, MessageCircle, Users, Plus, Pencil, Trash2, Ca
 import { useState } from 'react'
 import FormatBadge from './FormatBadge'
 import AddEventModal from './AddEventModal'
+import FeedbackSection from './FeedbackSection'
 import { FORMAT_ORDER } from '../lib/formats'
 import { supabase } from '../lib/supabase'
 import { downloadICS } from '../lib/icalendar'
 
-export default function EventModal({ triathlon, onClose, onUpdated }) {
-  const [name, setName] = useState('')
+export default function EventModal({ triathlon, onClose, onUpdated, identity }) {
+  const [name, setName] = useState(identity || '')
   const [participantFormat, setParticipantFormat] = useState(triathlon.formats?.[0] || 'M')
   const [participantStatus, setParticipantStatus] = useState('confirmed')
   const [saving, setSaving] = useState(false)
@@ -57,7 +58,10 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
   }
 
   async function handleDelete() {
-    await supabase.from('triathlons').delete().eq('id', triathlon.id)
+    await supabase.from('triathlons').update({
+      deleted_at: new Date().toISOString(),
+      deleted_by: identity || null,
+    }).eq('id', triathlon.id)
     onUpdated()
     onClose()
   }
@@ -223,6 +227,7 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
                     value={name}
                     onChange={e => { setName(e.target.value); setError('') }}
                     required
+                    readOnly={!!identity}
                   />
                 </div>
                 <div>
@@ -253,6 +258,8 @@ export default function EventModal({ triathlon, onClose, onUpdated }) {
               </button>
             </form>
           </div>
+
+          {isPast && <FeedbackSection triathlon={triathlon} identity={identity} />}
         </div>
       </div>
     </div>

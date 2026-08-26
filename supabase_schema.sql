@@ -16,7 +16,9 @@ create table if not exists triathlons (
   whatsapp_url text,
   comment     text,
   is_club_event boolean not null default false,
-  created_at  timestamptz default now()
+  created_at  timestamptz default now(),
+  deleted_at  timestamptz,
+  deleted_by  text
 );
 
 -- Table participants : une ligne = une personne sur un format d'un triathlon
@@ -40,15 +42,37 @@ create table if not exists bib_transfers (
   created_at    timestamptz default now()
 );
 
+-- Table feedback : avis post-course sur une édition passée
+create table if not exists feedbacks (
+  id            uuid primary key default gen_random_uuid(),
+  triathlon_id  uuid not null references triathlons(id) on delete cascade,
+  author_name   text not null,
+  rating        int not null check (rating between 1 and 5),
+  comment       text,
+  created_at    timestamptz default now()
+);
+
 -- Index pour les requêtes fréquentes
 create index if not exists idx_triathlons_date on triathlons(date);
 create index if not exists idx_participants_triathlon on participants(triathlon_id);
 create index if not exists idx_bib_transfers_triathlon on bib_transfers(triathlon_id);
+create index if not exists idx_feedbacks_triathlon on feedbacks(triathlon_id);
+create index if not exists idx_triathlons_deleted_at on triathlons(deleted_at);
 
 -- Activer Row Level Security (lecture publique, écriture publique car pas d'auth)
 alter table triathlons enable row level security;
 alter table participants enable row level security;
 alter table bib_transfers enable row level security;
+alter table feedbacks enable row level security;
+
+create policy "Lecture publique feedbacks"
+  on feedbacks for select using (true);
+
+create policy "Ecriture publique feedbacks"
+  on feedbacks for insert with check (true);
+
+create policy "Suppression publique feedbacks"
+  on feedbacks for delete using (true);
 
 create policy "Lecture publique bib_transfers"
   on bib_transfers for select using (true);
@@ -86,10 +110,12 @@ create policy "Suppression publique participants"
 alter table triathlons add column if not exists end_date date;
 alter table triathlons add column if not exists is_club_event boolean not null default false;
 alter table participants add column if not exists status text not null default 'confirmed' check (status in ('confirmed', 'interested'));
+alter table triathlons add column if not exists deleted_at timestamptz;
+alter table triathlons add column if not exists deleted_by text;
 
--- Migration bourse aux dossards (si triathlons/participants existent déjà) :
--- exécuter uniquement le bloc "Table bourse aux dossards" et les 4 policies bib_transfers
--- plus haut dans ce fichier (create table if not exists gère l'idempotence).
+-- Migration bourse aux dossards / feedbacks (si triathlons/participants existent déjà) :
+-- exécuter uniquement les blocs "Table bourse aux dossards" / "Table feedback" et leurs
+-- policies associées plus haut dans ce fichier (create table if not exists gère l'idempotence).
 
 -- Données de test (optionnel, à supprimer en prod)
 insert into triathlons (name, city, date, lat, lng, formats, website, comment)
